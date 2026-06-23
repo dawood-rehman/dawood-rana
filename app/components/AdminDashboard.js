@@ -17,9 +17,11 @@ import AdminCertifications from './admin/AdminCertifications';
 import AdminAchievements from './admin/AdminAchievements';
 import AdminPassword from './admin/AdminPassword';
 import AdminProfilePicture from './admin/AdminProfilePicture';
+import AdminResume from './admin/AdminResume';
 
 const tabs = [
   { id: 'profile-pic', label: 'Profile Picture', icon: '🖼️' },
+  { id: 'resume', label: 'Resume', icon: '📄' },
   { id: 'projects', label: 'Projects', icon: '📁' },
   { id: 'skills', label: 'Skills', icon: '⚙️' },
   { id: 'education', label: 'Education', icon: '🎓' },
@@ -64,6 +66,8 @@ export default function AdminDashboard() {
     switch (activeTab) {
       case 'profile-pic':
         return <AdminProfilePicture />;
+      case 'resume':
+        return <AdminResume />;
       case 'projects':
         return <AdminProjects />;
       case 'skills':

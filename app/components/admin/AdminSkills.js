@@ -98,10 +98,7 @@ export default function AdminSkills() {
         <h2 className="text-2xl sm:text-3xl font-bold text-white">Manage Skills</h2>
         {!isAdding && (
           <button
-            onClick={() => {
-              setIsAdding(true);
-              resetForm();
-            }}
+            onClick={() => setIsAdding(true)}
             className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start font-medium duration-150"
           >
             <FaPlus /> Add Skill

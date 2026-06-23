@@ -9,6 +9,7 @@ export default function AboutSection() {
   const [borderColor, setBorderColor] = useState('#3b82f6');
   const [imageError, setImageError] = useState(false);
   const [customImage, setCustomImage] = useState('');
+  const [hasResume, setHasResume] = useState(false);
 
   useEffect(() => {
     const colors = [
@@ -35,6 +36,15 @@ export default function AboutSection() {
     if (savedImage) {
       setCustomImage(savedImage);
     }
+    // Check for resume file on server
+    (async () => {
+      try {
+        const res = await fetch('/resume.pdf', { method: 'HEAD' });
+        if (res.ok) setHasResume(true);
+      } catch (e) {
+        // ignore
+      }
+    })();
   }, []);
 
   return (
@@ -128,6 +138,13 @@ export default function AboutSection() {
           >
             Computer Science Student | Full-Stack Developer | Tech Enthusiast
           </motion.p>
+          {hasResume && (
+            <div className="mt-6 flex justify-center">
+              <a href="/resume.pdf" download className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-lg">
+                Download Resume
+              </a>
+            </div>
+          )}
           
           <motion.div
             initial={{ opacity: 0, y: 30 }}
