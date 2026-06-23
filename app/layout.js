@@ -17,6 +17,10 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Dawood Rehman - Portfolio",
   description: "Portfolio website of Dawood Rehman - Computer Science Student and Full-Stack Developer",
+  icons: {
+    icon: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({ children }) {

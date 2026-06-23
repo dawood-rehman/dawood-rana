@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#374151"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="24" fill="url(#g)" />
+  <g transform="translate(0,6)">
+    <text x="50%" y="55%" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="56">DR</text>
+  </g>
+</svg>
