@@ -55,22 +55,24 @@ export default function Navbar() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
           ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-16 md:h-16">
           <motion.a
             href="#about"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            className="relative"
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            className="relative flex-shrink-0"
           >
             <motion.div
-              className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white text-lg relative overflow-hidden"
+              className="w-10 sm:w-12 h-10 sm:h-12 rounded-full flex items-center justify-center font-bold text-white text-sm sm:text-lg relative overflow-hidden"
               style={{
                 border: `3px solid ${circleColor}`,
                 background: `linear-gradient(135deg, ${bgColor}, ${circleColor})`,
@@ -131,7 +133,7 @@ export default function Navbar() {
           </motion.a>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex space-x-6 lg:space-x-8">
             {navItems.map((item, index) => {
               const colors = [
                 'from-cyan-400 to-blue-500',
@@ -150,7 +152,8 @@ export default function Navbar() {
                   href={item.href}
                   whileHover={{ scale: 1.15, y: -2 }}
                   whileTap={{ scale: 0.9 }}
-                  className="relative font-semibold transition-all duration-300"
+                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  className="relative font-semibold transition-all duration-300 text-sm lg:text-base"
                 >
                   <span className={`bg-gradient-to-r ${colorClass} bg-clip-text text-transparent hover:drop-shadow-lg`}>
                     {item.name}
@@ -159,7 +162,7 @@ export default function Navbar() {
                     className={`absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r ${colorClass}`}
                     initial={{ scaleX: 0 }}
                     whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
                   />
                 </motion.a>
               );
@@ -169,7 +172,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden text-gray-700 dark:text-gray-300 p-2"
+            className="md:hidden text-gray-700 dark:text-gray-300 p-2 text-lg sm:text-xl"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
@@ -183,7 +186,8 @@ export default function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden py-4 space-y-4 border-t border-gray-200 dark:border-gray-700 mt-2"
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="md:hidden py-3 sm:py-4 space-y-2 sm:space-y-3 border-t border-gray-200 dark:border-gray-700 mt-2"
             >
               {navItems.map((item, index) => {
                 const colors = [
@@ -198,17 +202,20 @@ export default function Navbar() {
                 const colorClass = colors[index % colors.length];
                 
                 return (
-                  <a
+                  <motion.a
                     key={index}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`block px-4 py-3 rounded-lg bg-gradient-to-r ${colorClass} bg-clip-text text-transparent hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold transition-all hover:scale-105`}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05, duration: 0.3, ease: 'easeOut' }}
+                    className={`block px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-gradient-to-r ${colorClass} bg-clip-text text-transparent hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold transition-all hover:scale-105 text-sm sm:text-base`}
                   >
                     {item.name}
-                  </a>
+                  </motion.a>
                 );
               })}
-              <div className="px-4 pt-2">
+              <div className="px-3 sm:px-4 pt-2 sm:pt-3">
                 <ThemeToggle 
                   isMobile={true} 
                   onToggle={() => setIsMobileMenuOpen(false)} 

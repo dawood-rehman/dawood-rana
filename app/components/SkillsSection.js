@@ -1,21 +1,36 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-
-const skills = [
-  { name: 'HTML', color: 'from-orange-500 to-red-500' },
-  { name: 'CSS', color: 'from-blue-500 to-cyan-500' },
-  { name: 'JavaScript', color: 'from-yellow-500 to-orange-500' },
-  { name: 'TypeScript', color: 'from-blue-600 to-indigo-600' },
-  { name: 'MongoDB', color: 'from-green-500 to-emerald-500' },
-  { name: 'API Integration', color: 'from-purple-500 to-pink-500' },
-  { name: 'GitHub', color: 'from-gray-700 to-gray-900' },
-  { name: 'C++', color: 'from-blue-700 to-blue-900' },
-];
+import { getFromStorage, STORAGE_KEYS } from '@/lib/storage';
 
 export default function SkillsSection() {
+  const [skills, setSkills] = useState([]);
+
+  useEffect(() => {
+    const loadSkills = () => {
+      const data = getFromStorage(STORAGE_KEYS.SKILLS, []);
+      setSkills(data);
+    };
+
+    loadSkills();
+
+    // Listen for storage changes
+    const handleStorageChange = () => {
+      loadSkills();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('skillsUpdated', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('skillsUpdated', handleStorageChange);
+    };
+  }, []);
+
   return (
-    <section id="skills" className="min-h-screen flex items-center justify-center py-20 px-4 relative overflow-hidden">
+    <section id="skills" className="min-h-screen flex items-center justify-center py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 relative overflow-hidden">
       {/* Enhanced background */}
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-900 via-blue-900 to-indigo-900 dark:from-gray-950 dark:via-cyan-950 dark:to-blue-950">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.3),transparent_50%)]"></div>
@@ -32,32 +47,33 @@ export default function SkillsSection() {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent"
+          transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35 }}
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-8 sm:mb-12 md:mb-16 bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent"
         >
           Skills
         </motion.h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
           {skills.map((skill, index) => (
             <motion.div
-              key={index}
+              key={skill.id || index}
               initial={{ opacity: 0, scale: 0, rotate: -180 }}
               whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
               viewport={{ once: true }}
               transition={{ 
-                duration: 0.6, 
                 delay: index * 0.1,
                 type: 'spring',
-                stiffness: 200
+                stiffness: 300,
+                damping: 25,
+                duration: 0.35
               }}
               whileHover={{ 
                 scale: 1.15, 
                 rotate: [0, -10, 10, -10, 0],
-                y: -10,
-                transition: { duration: 0.5 }
+                y: -8,
+                transition: { type: 'spring', stiffness: 300, damping: 25 }
               }}
-              className={`bg-gradient-to-br ${skill.color} rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-default relative overflow-hidden group`}
+              className={`bg-gradient-to-br ${skill.color} rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-default relative overflow-hidden group`}
             >
               {/* Animated shine effect */}
               <motion.div
@@ -67,7 +83,7 @@ export default function SkillsSection() {
                 transition={{ duration: 0.6 }}
               />
               <motion.p 
-                className="text-white text-center font-bold text-lg relative z-10"
+                className="text-white text-center font-bold text-sm sm:text-base md:text-lg relative z-10"
                 animate={{ 
                   textShadow: [
                     '0 0 0px rgba(255,255,255,0)',

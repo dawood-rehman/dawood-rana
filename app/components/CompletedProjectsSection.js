@@ -45,7 +45,7 @@ const stats = [
 
 export default function CompletedProjectsSection() {
   return (
-    <section id="completed-projects" className="min-h-screen flex items-center justify-center py-20 px-4 relative overflow-hidden">
+    <section id="completed-projects" className="min-h-screen flex items-center justify-center py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 relative overflow-hidden">
       {/* Background with animated gradients */}
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-900 dark:from-gray-950 dark:via-emerald-950 dark:to-teal-950">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
@@ -58,8 +58,8 @@ export default function CompletedProjectsSection() {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20"
+          transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-12 sm:mb-16 md:mb-20"
         >
           {stats.map((stat, index) => (
             <motion.div
@@ -67,13 +67,13 @@ export default function CompletedProjectsSection() {
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ scale: 1.1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35, delay: index * 0.1 }}
+              whileHover={{ scale: 1.05, transition: { type: 'spring', stiffness: 300, damping: 25 } }}
               className="text-center"
             >
-              <div className={`bg-gradient-to-br ${stat.gradient} p-6 rounded-2xl shadow-2xl border border-white/20`}>
-                <div className="text-4xl md:text-5xl font-bold text-white mb-2">{stat.number}</div>
-                <div className="text-gray-200 text-sm md:text-base">{stat.label}</div>
+              <div className={`bg-gradient-to-br ${stat.gradient} p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-white/20`}>
+                <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1 sm:mb-2">{stat.number}</div>
+                <div className="text-gray-200 text-xs sm:text-sm md:text-base font-medium">{stat.label}</div>
               </div>
             </motion.div>
           ))}
@@ -84,14 +84,15 @@ export default function CompletedProjectsSection() {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35 }}
+          className="text-center mb-10 sm:mb-12 md:mb-16 px-2"
         >
           <motion.h2
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent"
+            transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35 }}
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent"
           >
             Completed Projects
           </motion.h2>
@@ -99,57 +100,57 @@ export default function CompletedProjectsSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-gray-200 dark:text-gray-300 max-w-3xl mx-auto"
+            transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35, delay: 0.1 }}
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 dark:text-gray-300 max-w-3xl mx-auto"
           >
             Delivering excellence, one project at a time
           </motion.p>
         </motion.div>
 
         {/* Projects with Testimonials */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {completedProjects.map((project, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
-              whileHover={{ scale: 1.05, y: -10 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35, delay: index * 0.1 }}
+              whileHover={{ scale: 1.05, y: -8, transition: { type: 'spring', stiffness: 300, damping: 25 } }}
               className="group relative"
             >
-              <div className={`absolute -inset-1 bg-gradient-to-r ${project.gradient} rounded-3xl blur-lg opacity-30 group-hover:opacity-60 transition duration-500`}></div>
-              <div className="relative bg-gray-800/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl p-8 border border-gray-700/50 dark:border-gray-600/30 shadow-2xl h-full flex flex-col">
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${project.gradient} flex items-center justify-center mb-6 shadow-lg`}>
-                  <FaUser className="text-white text-2xl" />
+              <div className={`absolute -inset-1 bg-gradient-to-r ${project.gradient} rounded-2xl sm:rounded-3xl blur-lg opacity-30 group-hover:opacity-60 transition duration-500`}></div>
+              <div className="relative bg-gray-800/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 border border-gray-700/50 dark:border-gray-600/30 shadow-lg hover:shadow-xl transition-all h-full flex flex-col">
+                <div className={`w-12 sm:w-14 md:w-16 h-12 sm:h-14 md:h-16 rounded-lg sm:rounded-2xl bg-gradient-to-br ${project.gradient} flex items-center justify-center mb-4 sm:mb-6 shadow-md`}>
+                  <FaUser className="text-white text-lg sm:text-xl md:text-2xl" />
                 </div>
                 
                 <div className="mb-4">
-                  <h3 className="text-xl font-bold text-white dark:text-gray-100 mb-2">
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-white dark:text-gray-100 mb-2">
                     {project.projectName}
                   </h3>
-                  <p className="text-sm text-gray-400 mb-3">{project.client}</p>
-                  <p className="text-gray-300 dark:text-gray-400 text-sm leading-relaxed mb-4">
+                  <p className="text-xs sm:text-sm text-gray-400 mb-2 sm:mb-3">{project.client}</p>
+                  <p className="text-gray-300 dark:text-gray-400 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4">
                     {project.description}
                   </p>
                 </div>
 
-                <div className="flex gap-1 mb-4">
+                <div className="flex gap-1 mb-4 sm:mb-5">
                   {[...Array(project.rating)].map((_, i) => (
-                    <FaStar key={i} className="text-yellow-400 text-sm" />
+                    <FaStar key={i} className="text-yellow-400 text-xs sm:text-sm" />
                   ))}
                 </div>
 
-                <div className="mt-auto pt-4 border-t border-gray-700/50">
-                  <FaQuoteLeft className="text-gray-500 mb-3" />
-                  <p className="text-gray-300 dark:text-gray-400 text-sm italic mb-4">
+                <div className="mt-auto pt-3 sm:pt-4 md:pt-5 border-t border-gray-700/50">
+                  <FaQuoteLeft className="text-gray-500 mb-2 sm:mb-3 text-sm sm:text-base" />
+                  <p className="text-gray-300 dark:text-gray-400 text-xs sm:text-sm italic mb-3 sm:mb-4 leading-relaxed">
                     "{project.testimonial}"
                   </p>
                   <div>
-                    <p className="text-white dark:text-gray-200 font-semibold text-sm">
+                    <p className="text-white dark:text-gray-200 font-semibold text-xs sm:text-sm">
                       {project.clientName}
                     </p>
-                    <p className="text-gray-400 text-xs">{project.clientRole}</p>
+                    <p className="text-gray-400 text-[10px] sm:text-xs">{project.clientRole}</p>
                   </div>
                 </div>
               </div>
