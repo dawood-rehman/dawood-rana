@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
 import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
 import toast from 'react-hot-toast';
@@ -13,7 +12,7 @@ const gradientOptions = [
   'from-blue-600 to-indigo-600',
   'from-green-500 to-emerald-500',
   'from-purple-500 to-pink-500',
-  'from-gray-700 to-gray-900',
+  'from-slate-700 to-slate-900',
   'from-blue-700 to-blue-900',
   'from-pink-500 to-rose-500',
   'from-cyan-500 to-blue-500',
@@ -98,32 +97,26 @@ export default function AdminSkills() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <h2 className="text-2xl sm:text-3xl font-bold text-white">Manage Skills</h2>
         {!isAdding && (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+          <button
             onClick={() => {
               setIsAdding(true);
               resetForm();
             }}
-            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start font-medium duration-150"
           >
             <FaPlus /> Add Skill
-          </motion.button>
+          </button>
         )}
       </div>
 
       {/* Form */}
       {isAdding && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-700"
+        <div
+          className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-lg p-4 sm:p-6 border border-slate-600 transition-all duration-200"
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">
                 Skill Name *
               </label>
               <input
@@ -131,98 +124,89 @@ export default function AdminSkills() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g., React, JavaScript, etc."
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-2">
                 Gradient Color
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
                 {gradientOptions.map((gradient) => (
-                  <motion.button
+                  <button
                     key={gradient}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                     type="button"
                     onClick={() => setFormData({ ...formData, color: gradient })}
                     className={`h-8 sm:h-10 rounded-lg bg-gradient-to-br ${gradient} border-2 ${
                       formData.color === gradient
                         ? 'border-white shadow-lg'
                         : 'border-transparent'
-                    } transition-all`}
+                    } transition-all duration-150`}
                   />
                 ))}
               </div>
-              <p className="text-xs text-gray-400 mt-2">{formData.color}</p>
+              <p className="text-xs text-slate-400 mt-2">{formData.color}</p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-2">
               <button
                 type="submit"
-                className="w-full sm:w-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm sm:text-base"
+                className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-lg transition-all text-sm sm:text-base font-medium duration-150"
               >
                 {editingId ? 'Update Skill' : 'Add Skill'}
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="w-full sm:w-auto px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm sm:text-base"
+                className="w-full sm:w-auto px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all text-sm sm:text-base font-medium duration-150"
               >
                 Cancel
               </button>
             </div>
           </form>
-        </motion.div>
+        </div>
       )}
 
       {/* Skills List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {skills.length === 0 ? (
-          <div className="col-span-full text-center text-gray-400 py-8">
+          <div className="col-span-full text-center text-slate-400 py-8">
             No skills yet
           </div>
         ) : (
           skills.map((skill, index) => (
-            <motion.div
+            <div
               key={skill.id}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.05, duration: 0.35, ease: 'easeOut' }}
-              className="relative group"
+              className="relative group transition-all duration-200"
             >
               <div
-                className={`bg-gradient-to-br ${skill.color} rounded-xl p-4 sm:p-6 h-24 sm:h-32 flex items-center justify-center relative overflow-hidden hover:shadow-lg transition-shadow`}
+                className={`bg-gradient-to-br ${skill.color} rounded-xl p-4 sm:p-6 h-24 sm:h-32 flex items-center justify-center relative overflow-hidden hover:shadow-lg transition-shadow duration-150`}
               >
                 <p className="text-white text-center font-bold text-sm sm:text-lg z-10">
                   {skill.name}
                 </p>
-                <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-black/70 p-2 rounded">
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                    onClick={() => handleEdit(skill)}
-                    className="p-1 bg-blue-600 hover:bg-blue-700 text-white rounded"
-                    title="Edit skill"
-                  >
-                    <FaEdit size={12} />
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                    onClick={() => handleDelete(skill.id)}
-                    className="p-1 bg-red-600 hover:bg-red-700 text-white rounded"
-                    title="Delete skill"
-                  >
-                    <FaTrash size={12} />
-                  </motion.button>
-                </div>
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-150" />
               </div>
-            </motion.div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                <button
+                  onClick={() => handleEdit(skill)}
+                  className="flex-1 p-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded transition-all duration-150 text-sm font-medium"
+                  title="Edit skill"
+                >
+                  <FaEdit className="mx-auto" />
+                </button>
+                <button
+                  onClick={() => handleDelete(skill.id)}
+                  className="flex-1 p-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded transition-all duration-150 text-sm font-medium"
+                  title="Delete skill"
+                >
+                  <FaTrash className="mx-auto" />
+                </button>
+              </div>
+            </div>
           ))
         )}
       </div>

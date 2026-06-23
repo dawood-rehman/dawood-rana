@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { FaArrowLeft, FaSignOutAlt, FaLock } from 'react-icons/fa';
 import { useAdmin } from '@/app/context/AdminContext';
 import { useRouter } from 'next/navigation';
@@ -17,8 +16,10 @@ import AdminWorkExperience from './admin/AdminWorkExperience';
 import AdminCertifications from './admin/AdminCertifications';
 import AdminAchievements from './admin/AdminAchievements';
 import AdminPassword from './admin/AdminPassword';
+import AdminProfilePicture from './admin/AdminProfilePicture';
 
 const tabs = [
+  { id: 'profile-pic', label: 'Profile Picture', icon: '🖼️' },
   { id: 'projects', label: 'Projects', icon: '📁' },
   { id: 'skills', label: 'Skills', icon: '⚙️' },
   { id: 'education', label: 'Education', icon: '🎓' },
@@ -49,8 +50,8 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-gray-400">Loading...</div>
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="text-slate-400">Loading...</div>
       </div>
     );
   }
@@ -61,6 +62,8 @@ export default function AdminDashboard() {
 
   const renderTabContent = () => {
     switch (activeTab) {
+      case 'profile-pic':
+        return <AdminProfilePicture />;
       case 'projects':
         return <AdminProjects />;
       case 'skills':
@@ -85,32 +88,26 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900">
       {/* Header */}
-      <div className="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
+      <div className="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700 sticky top-0 z-40">
         <div className="w-full px-3 sm:px-4 py-3 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          <button
             onClick={() => router.push('/')}
-            className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors text-sm sm:text-base"
+            className="flex items-center gap-2 text-slate-300 hover:text-white transition-all text-sm sm:text-base duration-150 hover:translate-x-0.5"
           >
             <FaArrowLeft className="text-xs sm:text-base" />
             <span className="hidden sm:inline">Back to Portfolio</span>
             <span className="sm:hidden">Back</span>
-          </motion.button>
+          </button>
           <h1 className="text-xl sm:text-2xl font-bold text-white text-center">Admin Dashboard</h1>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          <button
             onClick={handleLogout}
-            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm sm:text-base"
+            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-lg transition-all text-sm sm:text-base duration-150 font-medium"
           >
             <FaSignOutAlt className="text-xs sm:text-base" />
             <span className="hidden sm:inline">Logout</span>
-          </motion.button>
+          </button>
         </div>
       </div>
 
@@ -118,36 +115,30 @@ export default function AdminDashboard() {
       <div className="w-full px-3 sm:px-4 py-6 sm:py-8">
         {/* Tabs Navigation */}
         <div className="mb-6 sm:mb-8">
-          <div className="flex flex-wrap gap-2 pb-4 border-b border-gray-800 overflow-x-auto scrollbar-hide">
+          <div className="flex flex-wrap gap-2 pb-4 border-b border-slate-700 overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
-              <motion.button
+              <button
                 key={tab.id}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg whitespace-nowrap transition-all text-xs sm:text-sm ${
+                className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg whitespace-nowrap transition-all text-xs sm:text-sm font-medium duration-150 ${
                   activeTab === tab.id
-                    ? 'bg-purple-600 text-white shadow-lg'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                 }`}
               >
                 {tab.icon} <span className="hidden sm:inline">{tab.label}</span>
-              </motion.button>
+              </button>
             ))}
           </div>
         </div>
 
         {/* Tab Content */}
-        <motion.div
+        <div
           key={activeTab}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="transition-all duration-200"
         >
           {renderTabContent()}
-        </motion.div>
+        </div>
       </div>
     </div>
   );

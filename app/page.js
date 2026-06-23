@@ -9,7 +9,6 @@ import CompletedProjectsSection from './components/CompletedProjectsSection';
 import EducationSection from './components/EducationSection';
 import SkillsSection from './components/SkillsSection';
 import ContactSection from './components/ContactSection';
-import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
 import WhatsAppButton from './components/WhatsAppButton';
 import DigitalClock from './components/DigitalClock';
@@ -26,7 +25,6 @@ export default function Home() {
   return (
     <main className="relative overflow-x-hidden">
       <Navbar />
-      <ThemeToggle />
       <AboutSection />
       <PassionSection />
       <ProjectsSection />

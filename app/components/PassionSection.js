@@ -35,7 +35,7 @@ export default function PassionSection() {
   return (
     <section id="passion" className="min-h-screen flex items-center justify-center py-20 px-4 relative overflow-hidden">
       {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 dark:from-gray-950 dark:via-indigo-950 dark:to-purple-950 opacity-90">
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 dark:from-slate-950 dark:via-indigo-950 dark:to-purple-950 opacity-90">
         <div 
           className="absolute inset-0 opacity-20"
           style={{
@@ -49,7 +49,7 @@ export default function PassionSection() {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
           className="text-center mb-16"
         >
           <motion.h2
@@ -60,12 +60,12 @@ export default function PassionSection() {
           >
             My Passion for Tech
           </motion.h2>
-          <CrystalEffect className="text-xl md:text-2xl text-gray-200 dark:text-gray-300 max-w-4xl mx-auto">
+            <CrystalEffect className="text-xl md:text-2xl text-slate-200 dark:text-slate-300 max-w-4xl mx-auto">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.1, duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
             >
               Driven by curiosity and innovation, I'm passionate about creating digital solutions that make a difference.
             </motion.p>
@@ -79,36 +79,31 @@ export default function PassionSection() {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ scale: 1.05, y: -10 }}
+              transition={{ duration: 0.3, delay: index * 0.05, ease: [0.34, 1.56, 0.64, 1] }}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 rounded-3xl"
+              <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 rounded-3xl"
                 style={{
                   background: `linear-gradient(135deg, var(--tw-gradient-stops))`,
                 }}
               >
                 <div className={`bg-gradient-to-br ${passion.gradient} w-full h-full rounded-3xl`}></div>
               </div>
-              <CrystalEffect className="relative bg-white/10 dark:bg-gray-800/50 backdrop-blur-md rounded-3xl p-8 border border-white/20 dark:border-gray-700/50 shadow-2xl overflow-hidden">
+              <CrystalEffect className="relative bg-white/10 dark:bg-slate-800/50 backdrop-blur-md rounded-3xl p-8 border border-white/20 dark:border-slate-700/50 shadow-2xl overflow-hidden">
                 <motion.div 
                   className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${passion.gradient} flex items-center justify-center mb-6 shadow-lg`}
-                  whileHover={{ rotate: 360, scale: 1.1 }}
-                  transition={{ duration: 0.6 }}
+                  transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
                 >
                   <passion.icon className="text-white text-2xl" />
                 </motion.div>
                 <motion.h3 
-                  className="text-2xl font-bold mb-4 text-white dark:text-gray-100"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
+                  className="text-2xl font-bold mb-4 text-white dark:text-slate-100"
+                  transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
                 >
                   {passion.title}
                 </motion.h3>
                 <motion.p 
-                  className="text-gray-200 dark:text-gray-300 leading-relaxed"
-                  initial={{ opacity: 0.8 }}
-                  whileHover={{ opacity: 1 }}
+                  className="text-slate-200 dark:text-slate-300 leading-relaxed"
                 >
                   {passion.description}
                 </motion.p>
@@ -125,8 +120,8 @@ export default function PassionSection() {
           className="mt-16 text-center"
         >
           <div className="inline-block bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 p-[2px] rounded-full">
-            <div className="bg-gray-900 dark:bg-gray-800 rounded-full px-8 py-4">
-              <p className="text-lg text-gray-200 dark:text-gray-300">
+            <div className="bg-slate-900 dark:bg-slate-800 rounded-full px-8 py-4">
+              <p className="text-lg text-slate-200 dark:text-slate-300">
                 "Technology is best when it brings people together." - Matt Mullenweg
               </p>
             </div>

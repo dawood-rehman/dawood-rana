@@ -14,8 +14,6 @@ export default function WhatsAppButton() {
       rel="noopener noreferrer"
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
       className="fixed right-6 bottom-6 md:right-auto md:left-6 z-50 bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 text-white p-4 rounded-full shadow-2xl hover:shadow-green-500/50 transition-all duration-300 flex items-center justify-center w-14 h-14"
       aria-label="Contact on WhatsApp"
     >

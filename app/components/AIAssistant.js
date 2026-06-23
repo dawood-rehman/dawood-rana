@@ -443,8 +443,7 @@ export default function AIAssistant() {
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-32 right-6 md:bottom-40 z-50 bg-gradient-to-br from-purple-600 to-pink-600 dark:from-purple-800 dark:to-pink-800 text-white p-4 rounded-full shadow-2xl hover:shadow-purple-500/50 transition-all duration-300"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+        whileTap={{ scale: 0.95 }}
         aria-label="Open AI Assistant"
       >
         {isOpen ? (
@@ -460,7 +459,7 @@ export default function AIAssistant() {
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="fixed bottom-40 right-6 md:bottom-48 z-50 w-80 md:w-96 h-96 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden"
+            className="fixed bottom-40 right-6 md:bottom-48 z-50 w-80 md:w-96 h-96 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden"
           >
             <div className="bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-800 dark:to-pink-800 p-4 text-white">
               <h3 className="font-bold flex items-center gap-2">
@@ -481,7 +480,7 @@ export default function AIAssistant() {
                     className={`max-w-[80%] rounded-lg p-3 ${
                       msg.role === "user"
                         ? "bg-gradient-to-br from-purple-600 to-blue-600 text-white"
-                        : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                        : "bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200"
                     }`}
                   >
                     <p className="text-sm">{msg.content}</p>
@@ -493,7 +492,7 @@ export default function AIAssistant() {
 
             <form
               onSubmit={handleSend}
-              className="p-4 border-t border-gray-200 dark:border-gray-700"
+              className="p-4 border-t border-slate-200 dark:border-slate-700"
             >
               <div className="flex gap-2">
                 <input
@@ -501,7 +500,7 @@ export default function AIAssistant() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask me anything..."
-                  className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="flex-1 px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
                 <button
                   type="submit"

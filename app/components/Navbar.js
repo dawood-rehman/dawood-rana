@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import ThemeToggle from './ThemeToggle';
 
 const navItems = [
   { name: 'About', href: '#about' },
@@ -46,7 +45,7 @@ export default function Navbar() {
       const randomColor = colors[Math.floor(Math.random() * colors.length)];
       setCircleColor(randomColor.border);
       setBgColor(randomColor.bg);
-    }, 1000);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, []);
@@ -55,10 +54,10 @@ export default function Navbar() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+      transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-150 ${
         isScrolled
-          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg'
+          ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       }`}
     >
@@ -66,9 +65,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-14 sm:h-16 md:h-16">
           <motion.a
             href="#about"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            transition={{ duration: 0.2, ease: [0.4, 0.0, 0.2, 1] }}
             className="relative flex-shrink-0"
           >
             <motion.div
@@ -76,37 +73,12 @@ export default function Navbar() {
               style={{
                 border: `3px solid ${circleColor}`,
                 background: `linear-gradient(135deg, ${bgColor}, ${circleColor})`,
-                boxShadow: `0 0 20px ${circleColor}60, 0 0 40px ${circleColor}30`,
-              }}
-              animate={{
-                rotate: [0, 5, -5, 0],
-                scale: [1, 1.05, 1],
-              }}
-              transition={{
-                rotate: {
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                },
-                scale: {
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                },
+                boxShadow: `0 0 20px ${circleColor}, 0 0 40px ${circleColor}`,
               }}
             >
               {/* Animated shine effect */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                animate={{
-                  x: ['-100%', '200%'],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  repeatDelay: 1,
-                  ease: 'easeInOut',
-                }}
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
               />
               
               {/* Profile Picture or Fallback */}
@@ -114,21 +86,6 @@ export default function Navbar() {
          
                 <span className="relative z-10">DR</span>
           
-              
-              {/* Pulsing rings */}
-              <motion.div
-                className="absolute inset-0 rounded-full border-2"
-                style={{ borderColor: circleColor }}
-                animate={{
-                  scale: [1, 1.3, 1],
-                  opacity: [0.5, 0, 0.5],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              />
             </motion.div>
           </motion.a>
 
@@ -150,9 +107,8 @@ export default function Navbar() {
                 <motion.a
                   key={index}
                   href={item.href}
-                  whileHover={{ scale: 1.15, y: -2 }}
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: [0.4, 0.0, 0.2, 1] }}
                   className="relative font-semibold transition-all duration-300 text-sm lg:text-base"
                 >
                   <span className={`bg-gradient-to-r ${colorClass} bg-clip-text text-transparent hover:drop-shadow-lg`}>
@@ -161,8 +117,7 @@ export default function Navbar() {
                   <motion.div
                     className={`absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r ${colorClass}`}
                     initial={{ scaleX: 0 }}
-                    whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                    transition={{ duration: 0.2, ease: [0.165, 0.84, 0.44, 1] }}
                   />
                 </motion.a>
               );
@@ -172,7 +127,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden text-gray-700 dark:text-gray-300 p-2 text-lg sm:text-xl"
+            className="md:hidden text-slate-700 dark:text-slate-300 p-2 text-lg sm:text-xl"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
@@ -186,8 +141,8 @@ export default function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="md:hidden py-3 sm:py-4 space-y-2 sm:space-y-3 border-t border-gray-200 dark:border-gray-700 mt-2"
+              transition={{ duration: 0.2, ease: [0.165, 0.84, 0.44, 1] }}
+              className="md:hidden py-3 sm:py-4 space-y-2 sm:space-y-3 border-t border-slate-200 dark:border-slate-700 mt-2"
             >
               {navItems.map((item, index) => {
                 const colors = [
@@ -209,18 +164,12 @@ export default function Navbar() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05, duration: 0.3, ease: 'easeOut' }}
-                    className={`block px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-gradient-to-r ${colorClass} bg-clip-text text-transparent hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold transition-all hover:scale-105 text-sm sm:text-base`}
+                    className={`block px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-gradient-to-r ${colorClass} bg-clip-text text-transparent hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold transition-all hover:scale-105 text-sm sm:text-base duration-150`}
                   >
                     {item.name}
                   </motion.a>
                 );
               })}
-              <div className="px-3 sm:px-4 pt-2 sm:pt-3">
-                <ThemeToggle 
-                  isMobile={true} 
-                  onToggle={() => setIsMobileMenuOpen(false)} 
-                />
-              </div>
             </motion.div>
           )}
         </AnimatePresence>

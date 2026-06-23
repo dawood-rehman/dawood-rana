@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
 import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
 import toast from 'react-hot-toast';
@@ -125,53 +124,47 @@ export default function AdminContactInfo() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
           <h2 className="text-2xl sm:text-3xl font-bold text-white">Contact Information</h2>
           {!isAddingContact && (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            <button
               onClick={() => setIsAddingContact(true)}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-colors duration-150 text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start font-medium"
             >
               <FaPlus /> Add Contact
-            </motion.button>
+            </button>
           )}
         </div>
 
         {isAddingContact && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-700"
+          <div
+            className="bg-slate-800 rounded-lg p-4 sm:p-6 border border-slate-700"
           >
             <form onSubmit={handleAddContact} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">Label *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">Label *</label>
                   <input
                     type="text"
                     value={formData.label}
                     onChange={(e) => setFormData({ ...formData, label: e.target.value })}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">Value *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">Value *</label>
                   <input
                     type="text"
                     value={formData.value}
                     onChange={(e) => setFormData({ ...formData, value: e.target.value })}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">Link</label>
+                <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">Link</label>
                 <input
                   type="text"
                   value={formData.link}
                   onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                 />
               </div>
               <div className="flex flex-col sm:flex-row gap-2">
@@ -184,23 +177,20 @@ export default function AdminContactInfo() {
                 <button
                   type="button"
                   onClick={resetContactForm}
-                  className="w-full sm:w-auto px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm sm:text-base"
+                  className="w-full sm:w-auto px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors duration-150 text-sm sm:text-base font-medium"
                 >
                   Cancel
                 </button>
               </div>
             </form>
-          </motion.div>
+          </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {contacts.map((contact, index) => (
-            <motion.div
+            <div
               key={contact.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: index * 0.08, duration: 0.35, ease: 'easeOut' }}
-              className="bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-700 hover:border-gray-600 transition-colors"
+              className="bg-slate-800 rounded-lg p-3 sm:p-4 border border-slate-700 hover:border-slate-600 transition-colors"
             >
               <div className="flex justify-between items-start mb-2">
                 <h3 className="font-bold text-white text-sm sm:text-base">{contact.label}</h3>
@@ -226,64 +216,58 @@ export default function AdminContactInfo() {
                   </button>
                 </div>
               </div>
-              <p className="text-gray-400 text-xs sm:text-sm">{contact.value}</p>
-            </motion.div>
+              <p className="text-slate-400 text-xs sm:text-sm">{contact.value}</p>
+            </div>
           ))}
         </div>
       </div>
 
       {/* Social Links Section */}
-      <div className="space-y-4 border-t border-gray-700 pt-6 sm:pt-8">
+      <div className="space-y-4 border-t border-slate-700 pt-6 sm:pt-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
           <h2 className="text-2xl sm:text-3xl font-bold text-white">Social Media Links</h2>
           {!isAddingSocial && (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            <button
               onClick={() => setIsAddingSocial(true)}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-colors duration-150 text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start font-medium"
             >
               <FaPlus /> Add Social Link
-            </motion.button>
+            </button>
           )}
         </div>
 
         {isAddingSocial && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-700"
+          <div
+            className="bg-slate-800 rounded-lg p-4 sm:p-6 border border-slate-700"
           >
             <form onSubmit={handleAddSocial} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">Name *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">Name *</label>
                   <input
                     type="text"
                     value={socialFormData.name}
                     onChange={(e) => setSocialFormData({ ...socialFormData, name: e.target.value })}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">URL *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">URL *</label>
                   <input
                     type="text"
                     value={socialFormData.url}
                     onChange={(e) => setSocialFormData({ ...socialFormData, url: e.target.value })}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">Description</label>
+                <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">Value *</label>
                 <input
                   type="text"
                   value={socialFormData.description}
                   onChange={(e) => setSocialFormData({ ...socialFormData, description: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                 />
               </div>
               <div className="flex flex-col sm:flex-row gap-2">
@@ -296,18 +280,18 @@ export default function AdminContactInfo() {
                 <button
                   type="button"
                   onClick={resetSocialForm}
-                  className="w-full sm:w-auto px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm sm:text-base"
+                  className="w-full sm:w-auto px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors duration-150 text-sm sm:text-base font-medium"
                 >
                   Cancel
                 </button>
               </div>
             </form>
-          </motion.div>
+          </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {socials.map((social, index) => (
-            <motion.div
+          {contacts.map((contact, index) => (
+            <div
               key={social.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -339,7 +323,7 @@ export default function AdminContactInfo() {
                 </div>
               </div>
               <p className="text-white/90 text-xs sm:text-sm">{social.description}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

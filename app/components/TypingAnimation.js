@@ -25,7 +25,7 @@ export default function TypingAnimation({ text, className = '', speed = 100 }) {
       {!isComplete && (
         <motion.span
           animate={{ opacity: [1, 0] }}
-          transition={{ duration: 0.8, repeat: Infinity, repeatType: 'reverse' }}
+          transition={{ duration: 0.2, repeat: Infinity, repeatType: 'reverse' }}
           className="inline-block w-0.5 h-full bg-current ml-1"
         >
           |

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const ThemeContext = createContext();
 
@@ -8,57 +8,49 @@ export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState('dark');
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    // Only run on client side
-    if (typeof window === 'undefined') return;
-    
-    setMounted(true);
+  // Apply theme to DOM and localStorage
+  const applyTheme = (newTheme) => {
     const root = document.documentElement;
-    const savedTheme = localStorage.getItem('theme');
-    
-    let initialTheme = 'dark';
-    if (savedTheme === 'light' || savedTheme === 'dark') {
-      initialTheme = savedTheme;
-    }
-    
-    // Apply theme immediately
-    if (initialTheme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    
-    setTheme(initialTheme);
-    if (!savedTheme) {
-      localStorage.setItem('theme', initialTheme);
-    }
-  }, []);
-
-  const toggleTheme = useCallback(() => {
-    if (typeof window === 'undefined') return;
-    
-    const root = document.documentElement;
-    // Always check DOM directly for the most accurate state
-    const isDark = root.classList.contains('dark');
-    const newTheme = isDark ? 'light' : 'dark';
-    
-    // Update DOM immediately
     if (newTheme === 'dark') {
       root.classList.add('dark');
+      document.body.classList.add('dark');
     } else {
       root.classList.remove('dark');
+      document.body.classList.remove('dark');
+    }
+    localStorage.setItem('theme', newTheme);
+  };
+
+  // Initialize theme on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    let savedTheme = localStorage.getItem('theme');
+    
+    // If no saved theme, detect from system preference
+    if (!savedTheme) {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      savedTheme = prefersDark ? 'dark' : 'light';
     }
     
-    // Update state using functional update
-    setTheme((prevTheme) => {
-      // Double-check: if state and DOM don't match, trust DOM
-      const actualTheme = root.classList.contains('dark') ? 'dark' : 'light';
-      localStorage.setItem('theme', actualTheme);
-      return actualTheme;
-    });
+    applyTheme(savedTheme);
+    setTheme(savedTheme);
+    setMounted(true);
   }, []);
 
-  // Prevent hydration mismatch
+  // Toggle theme - apply synchronously first, then update state
+  const toggleTheme = () => {
+    if (typeof window === 'undefined') return;
+    
+    const root = document.documentElement;
+    // Read current theme from DOM, not from stale state
+    const currentTheme = root.classList.contains('dark') ? 'dark' : 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    applyTheme(newTheme);
+    setTheme(newTheme);
+  };
+
   if (!mounted) {
     return (
       <ThemeContext.Provider value={{ theme: 'dark', toggleTheme }}>

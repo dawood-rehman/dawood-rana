@@ -2,7 +2,6 @@
 
 import { useTheme } from './ThemeProvider';
 import { FaSun, FaMoon } from 'react-icons/fa';
-import { motion } from 'framer-motion';
 
 export default function ThemeToggle({ isMobile = false, onToggle }) {
   const { theme, toggleTheme } = useTheme();
@@ -18,17 +17,11 @@ export default function ThemeToggle({ isMobile = false, onToggle }) {
     return (
       <button
         onClick={handleToggle}
-        className="flex items-center gap-3 w-full px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300"
+        className="flex items-center gap-3 w-full px-4 py-3 rounded-lg bg-gradient-to-r from-slate-200 to-slate-100 dark:from-indigo-900 dark:to-purple-900 hover:from-slate-300 hover:to-slate-200 dark:hover:from-indigo-800 dark:hover:to-purple-800 text-slate-700 dark:text-indigo-100 transition-all duration-150 font-medium"
         aria-label="Toggle theme"
       >
-        <motion.div
-          animate={{ rotate: theme === 'dark' ? 0 : 180 }}
-          transition={{ duration: 0.3 }}
-          className="text-xl"
-        >
-          {theme === 'dark' ? <FaSun /> : <FaMoon />}
-        </motion.div>
-        <span className="font-medium">
+        {theme === 'dark' ? <FaSun className="text-lg" /> : <FaMoon className="text-lg" />}
+        <span>
           {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
         </span>
       </button>
@@ -36,20 +29,14 @@ export default function ThemeToggle({ isMobile = false, onToggle }) {
   }
 
   return (
-    <motion.button
-      onClick={toggleTheme}
-      whileHover={{ scale: 1.1, rotate: 180 }}
-      whileTap={{ scale: 0.9 }}
-      className="hidden md:flex fixed top-6 right-6 z-50 bg-gradient-to-br from-amber-400 via-orange-500 to-pink-500 dark:from-indigo-600 dark:via-purple-600 dark:to-pink-600 text-white p-4 rounded-full shadow-2xl hover:shadow-amber-500/50 dark:hover:shadow-purple-500/50 transition-all duration-300 border-2 border-white/20 backdrop-blur-sm items-center justify-center"
+    <button
+      onClick={handleToggle}
+      className="hidden md:flex fixed top-6 right-6 z-50 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 dark:from-amber-400 dark:via-orange-400 dark:to-red-400 text-white dark:text-slate-900 p-4 rounded-full shadow-lg hover:shadow-xl transition-shadow duration-150 border-2 border-white/30 dark:border-white/20 items-center justify-center"
       aria-label="Toggle theme"
+      title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
     >
-      <motion.div
-        animate={{ rotate: theme === 'dark' ? 0 : 180 }}
-        transition={{ duration: 0.3 }}
-      >
-        {theme === 'dark' ? <FaSun className="text-xl" /> : <FaMoon className="text-xl" />}
-      </motion.div>
-    </motion.button>
+      {theme === 'dark' ? <FaSun className="text-lg" /> : <FaMoon className="text-lg" />}
+    </button>
   );
 }
 

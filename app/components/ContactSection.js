@@ -53,7 +53,7 @@ export default function ContactSection() {
   return (
     <section id="contact" className="min-h-screen flex items-center justify-center py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 relative overflow-hidden">
       {/* Enhanced animated background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 dark:from-gray-950 dark:via-indigo-950 dark:to-purple-950">
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 dark:from-slate-950 dark:via-indigo-950 dark:to-purple-950">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,rgba(99,102,241,0.4),transparent_50%)]"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(219,39,119,0.3),transparent_50%)]"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.2),transparent_50%)]"></div>
@@ -71,19 +71,19 @@ export default function ContactSection() {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35 }}
+          transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
           className="text-center mb-8 sm:mb-12 md:mb-16"
         >
           <motion.h2
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35 }}
+            transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
           >
             Get In Touch
           </motion.h2>
-          <CrystalEffect className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 dark:text-gray-300 max-w-3xl mx-auto px-2">
+          <CrystalEffect className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-200 dark:text-slate-300 max-w-3xl mx-auto px-2">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -105,22 +105,20 @@ export default function ContactSection() {
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05, x: 8, transition: { type: 'spring', stiffness: 300, damping: 25 } }}
+                transition={{ duration: 0.3, delay: index * 0.1, ease: [0.34, 1.56, 0.64, 1] }}
                 className="block"
               >
-                <CrystalEffect className="bg-white/10 dark:bg-gray-800/50 backdrop-blur-xl rounded-lg sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-white/20 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300">
+                <CrystalEffect className="bg-white/10 dark:bg-slate-800/50 backdrop-blur-xl rounded-lg sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-white/20 dark:border-slate-700/50 shadow-lg hover:shadow-xl transition-all duration-300">
                   <div className="flex items-center gap-3 sm:gap-4">
                     <motion.div
                       className="w-10 sm:w-12 md:w-14 h-10 sm:h-12 md:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
-                      whileHover={{ rotate: 360, scale: 1.1 }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35 }}
+                      transition={{ duration: 0.35, ease: [0.165, 0.84, 0.44, 1] }}
                     >
                       {getIcon(info.icon)({ className: "text-white text-sm sm:text-base md:text-lg" })}
                     </motion.div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 mb-0.5 truncate">{info.label}</p>
-                      <p className="text-sm sm:text-base md:text-lg font-semibold text-white dark:text-gray-200 truncate">{info.value}</p>
+                      <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-500 mb-0.5 truncate">{info.label}</p>
+                      <p className="text-sm sm:text-base md:text-lg font-semibold text-white dark:text-slate-200 truncate">{info.value}</p>
                     </div>
                   </div>
                 </CrystalEffect>
@@ -141,27 +139,18 @@ export default function ContactSection() {
                 viewport={{ once: true }}
                 transition={{ 
                   delay: index * 0.1,
-                  type: 'spring',
-                  stiffness: 300,
-                  damping: 25,
-                  duration: 0.35
-                }}
-                whileHover={{ 
-                  scale: 1.1, 
-                  y: -8,
-                  rotate: [0, -5, 5, 0],
-                  transition: { type: 'spring', stiffness: 300, damping: 25 }
+                  duration: 0.3,
+                  ease: [0.34, 1.56, 0.64, 1]
                 }}
                 whileTap={{ scale: 0.95 }}
                 className="group relative"
               >
                 {/* Glow effect */}
-                <div className={`absolute -inset-1 bg-gradient-to-br ${social.color} rounded-lg sm:rounded-2xl blur-lg opacity-0 group-hover:opacity-75 transition-opacity duration-500`}></div>
+                <div className={`absolute -inset-1 bg-gradient-to-br ${social.color} rounded-lg sm:rounded-2xl blur-lg opacity-0 group-hover:opacity-75 transition-opacity duration-300`}></div>
                 
                 <CrystalEffect className={`relative bg-gradient-to-br ${social.color} rounded-lg sm:rounded-2xl p-3 sm:p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 text-white h-full flex flex-col items-center justify-center`}>
                   <motion.div
-                    whileHover={{ rotate: 360, scale: 1.2 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35 }}
+                    transition={{ duration: 0.35, ease: [0.165, 0.84, 0.44, 1] }}
                     className="mb-2 sm:mb-3"
                   >
                     {getIcon(social.icon)({ className: "text-2xl sm:text-3xl md:text-4xl" })}
@@ -180,8 +169,9 @@ export default function ContactSection() {
                       ],
                     }}
                     transition={{
-                      duration: 2,
+                      duration: 0.8,
                       repeat: Infinity,
+                      repeatDelay: 2,
                       ease: 'easeInOut',
                     }}
                   />
@@ -200,8 +190,8 @@ export default function ContactSection() {
           className="text-center px-4"
         >
           <CrystalEffect className="inline-block bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-[2px] rounded-full hover:shadow-xl transition-shadow duration-300">
-            <div className="bg-gray-900 dark:bg-gray-800 rounded-full px-6 sm:px-8 py-3 sm:py-4">
-              <p className="text-sm sm:text-base md:text-lg text-gray-200 dark:text-gray-300 font-semibold">
+            <div className="bg-slate-900 dark:bg-slate-800 rounded-full px-6 sm:px-8 py-3 sm:py-4">
+              <p className="text-sm sm:text-base md:text-lg text-slate-200 dark:text-slate-300 font-semibold">
                 Ready to start a project? Let's talk! 💬
               </p>
             </div>

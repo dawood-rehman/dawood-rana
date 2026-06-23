@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
 import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
 import toast from 'react-hot-toast';
@@ -108,69 +107,63 @@ export default function AdminProjects() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <h2 className="text-2xl sm:text-3xl font-bold text-white">Manage Projects</h2>
         {!isAdding && (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+          <button
             onClick={() => {
               setIsAdding(true);
               resetForm();
             }}
-            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start font-medium duration-150"
           >
             <FaPlus /> Add Project
-          </motion.button>
+          </button>
         )}
       </div>
 
       {/* Form */}
       {isAdding && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-700"
+        <div
+          className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-lg p-4 sm:p-6 border border-slate-600 transition-all duration-200"
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">
                   Title *
                 </label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                 />
               </div>
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">
                   Gradient Class
                 </label>
                 <input
                   type="text"
                   value={formData.gradient}
                   onChange={(e) => setFormData({ ...formData, gradient: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">
                 Description *
               </label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 rows="3"
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">
                 Tech Stack (comma separated)
               </label>
               <input
@@ -178,31 +171,31 @@ export default function AdminProjects() {
                 value={formData.tech}
                 onChange={(e) => setFormData({ ...formData, tech: e.target.value })}
                 placeholder="Next.js, MongoDB, Redux"
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">
                   GitHub URL
                 </label>
                 <input
                   type="text"
                   value={formData.github}
                   onChange={(e) => setFormData({ ...formData, github: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                 />
               </div>
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-1">
                   Live URL
                 </label>
                 <input
                   type="text"
                   value={formData.live}
                   onChange={(e) => setFormData({ ...formData, live: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                 />
               </div>
             </div>
@@ -210,44 +203,41 @@ export default function AdminProjects() {
             <div className="flex flex-col sm:flex-row gap-2">
               <button
                 type="submit"
-                className="w-full sm:w-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm sm:text-base"
+                className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-lg transition-all text-sm sm:text-base font-medium duration-150"
               >
                 {editingId ? 'Update Project' : 'Add Project'}
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="w-full sm:w-auto px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm sm:text-base"
+                className="w-full sm:w-auto px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all text-sm sm:text-base font-medium duration-150"
               >
                 Cancel
               </button>
             </div>
           </form>
-        </motion.div>
+        </div>
       )}
 
       {/* Projects List */}
       <div className="grid gap-4">
         {projects.length === 0 ? (
-          <div className="text-center text-gray-400 py-8">No projects yet</div>
+          <div className="text-center text-slate-400 py-8">No projects yet</div>
         ) : (
           projects.map((project, index) => (
-            <motion.div
+            <div
               key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.08, duration: 0.35, ease: 'easeOut' }}
-              className="bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-700 hover:border-gray-600 transition-colors"
+              className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-lg p-4 sm:p-6 border border-slate-600 hover:border-slate-500 transition-all duration-150"
             >
               <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4">
                 <div className="flex-1 w-full">
                   <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{project.title}</h3>
-                  <p className="text-gray-400 mb-3 text-sm sm:text-base">{project.description}</p>
+                  <p className="text-slate-400 mb-3 text-sm sm:text-base">{project.description}</p>
                   <div className="flex flex-wrap gap-2 mb-3">
                     {project.tech.map((tech, i) => (
                       <span
                         key={i}
-                        className="px-2 sm:px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-xs sm:text-sm"
+                        className="px-2 sm:px-3 py-1 bg-slate-700 text-slate-300 rounded-full text-xs sm:text-sm"
                       >
                         {tech}
                       </span>
@@ -267,29 +257,23 @@ export default function AdminProjects() {
                   </div>
                 </div>
                 <div className="flex gap-2 w-full sm:w-auto">
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  <button
                     onClick={() => handleEdit(project)}
-                    className="flex-1 sm:flex-none p-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+                    className="flex-1 sm:flex-none p-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded transition-all duration-150 font-medium"
                     title="Edit project"
                   >
                     <FaEdit />
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  </button>
+                  <button
                     onClick={() => handleDelete(project.id)}
-                    className="flex-1 sm:flex-none p-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+                    className="flex-1 sm:flex-none p-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded transition-all duration-150 font-medium"
                     title="Delete project"
                   >
                     <FaTrash />
-                  </motion.button>
+                  </button>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))
         )}
       </div>

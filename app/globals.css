@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
 }
 
 @theme inline {
@@ -14,6 +14,12 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: light dark;
+}
+
+html.dark {
+  --background: #0f172a;
+  --foreground: #f8fafc;
 }
 
 body {
@@ -21,8 +27,14 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
+  transition: background-color 150ms, color 150ms;
 }
 
 * {
   box-sizing: border-box;
+}
+
+/* Smooth animations for theme transitions */
+button, input, textarea, select {
+  transition: background-color 150ms, color 150ms, border-color 150ms;
 }
