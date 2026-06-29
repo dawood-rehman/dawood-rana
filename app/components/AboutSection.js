@@ -148,7 +148,7 @@ export default function AboutSection() {
             </div>
             <div className="flex gap-2">
               <a
-                href="https://github.com/saabra926"
+                href="https://github.com/dawood-rehman"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-secondary focus-ring h-10 w-10 rounded-full"
