@@ -83,37 +83,6 @@ const passionSchema = new Schema(
   { _id: false }
 );
 
-const workExperienceSchema = new Schema(
-  {
-    id: requiredString,
-    title: requiredString,
-    company: requiredString,
-    duration: optionalString,
-    description: optionalString,
-  },
-  { _id: false }
-);
-
-const certificationSchema = new Schema(
-  {
-    id: requiredString,
-    title: requiredString,
-    issuer: optionalString,
-    year: optionalString,
-  },
-  { _id: false }
-);
-
-const achievementSchema = new Schema(
-  {
-    id: requiredString,
-    title: requiredString,
-    description: optionalString,
-    year: optionalString,
-  },
-  { _id: false }
-);
-
 const resumeSchema = new Schema(
   {
     url: optionalString,
@@ -141,9 +110,6 @@ const portfolioContentSchema = new Schema(
     socialLinks: { type: [socialSchema], default: [] },
     personalInfo: { type: personalInfoSchema, default: () => ({}) },
     passions: { type: [passionSchema], default: [] },
-    workExperience: { type: [workExperienceSchema], default: [] },
-    certifications: { type: [certificationSchema], default: [] },
-    achievements: { type: [achievementSchema], default: [] },
     resume: { type: resumeSchema, default: null },
     profilePicture: optionalString,
   },

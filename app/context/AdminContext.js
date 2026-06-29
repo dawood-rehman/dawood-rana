@@ -43,26 +43,6 @@ export function AdminProvider({ children }) {
     setIsAuthenticated(false);
   };
 
-  const updatePassword = async (currentPassword, newPassword) => {
-    try {
-      const response = await fetch('/api/admin/password', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentPassword, newPassword }),
-      });
-
-      const result = await response.json();
-      if (response.ok && result.success) return result;
-
-      return {
-        success: false,
-        message: result.message || 'Unable to update password',
-      };
-    } catch (error) {
-      return { success: false, message: 'Unable to reach password update service' };
-    }
-  };
-
   return (
     <AdminContext.Provider
       value={{
@@ -70,7 +50,6 @@ export function AdminProvider({ children }) {
         loading,
         login,
         logout,
-        updatePassword,
       }}
     >
       {children}
