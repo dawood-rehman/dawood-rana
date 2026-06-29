@@ -20,6 +20,7 @@ export const metadata = {
   description: "Portfolio website of Dawood Rehman - Computer Science Student and Full-Stack Developer",
   icons: {
     icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
     apple: '/favicon.svg',
   },
 };
