@@ -12,7 +12,7 @@ import {
   FaPhone,
   FaWhatsapp,
 } from 'react-icons/fa';
-import { getFromStorage, STORAGE_KEYS } from '@/lib/storage';
+import { DEFAULT_DATA, getFromStorage, STORAGE_KEYS } from '@/lib/storage';
 import { fadeUp, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
 import { getStableGradient } from './themePalette';
 
@@ -28,13 +28,13 @@ const icons = {
 };
 
 export default function ContactSection() {
-  const [socialLinks, setSocialLinks] = useState([]);
-  const [contactInfo, setContactInfo] = useState([]);
+  const [socialLinks, setSocialLinks] = useState(DEFAULT_DATA.socialLinks);
+  const [contactInfo, setContactInfo] = useState(DEFAULT_DATA.contactInfo);
 
   useEffect(() => {
     const loadData = () => {
-      setSocialLinks(getFromStorage(STORAGE_KEYS.SOCIAL_LINKS, []));
-      setContactInfo(getFromStorage(STORAGE_KEYS.CONTACT_INFO, []));
+      setSocialLinks(getFromStorage(STORAGE_KEYS.SOCIAL_LINKS, DEFAULT_DATA.socialLinks));
+      setContactInfo(getFromStorage(STORAGE_KEYS.CONTACT_INFO, DEFAULT_DATA.contactInfo));
     };
 
     loadData();

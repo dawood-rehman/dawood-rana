@@ -1,21 +1,33 @@
 'use client';
 
 import { useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { initializeStorage } from '@/lib/storage';
 import AboutSection from './components/AboutSection';
-import PassionSection from './components/PassionSection';
-import ProjectsSection from './components/ProjectsSection';
-import EducationSection from './components/EducationSection';
-import SkillsSection from './components/SkillsSection';
-import ContactSection from './components/ContactSection';
-import ScrollToTop from './components/ScrollToTop';
-import WhatsAppButton from './components/WhatsAppButton';
 import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import SectionLoader from './components/SectionLoader';
+
+const PassionSection = dynamic(() => import('./components/PassionSection'), {
+  loading: () => <SectionLoader label="Loading focus section" />,
+});
+const ProjectsSection = dynamic(() => import('./components/ProjectsSection'), {
+  loading: () => <SectionLoader label="Loading projects" />,
+});
+const EducationSection = dynamic(() => import('./components/EducationSection'), {
+  loading: () => <SectionLoader label="Loading education" />,
+});
+const SkillsSection = dynamic(() => import('./components/SkillsSection'), {
+  loading: () => <SectionLoader label="Loading skills" />,
+});
+const ContactSection = dynamic(() => import('./components/ContactSection'), {
+  loading: () => <SectionLoader label="Loading contact" />,
+});
+const Footer = dynamic(() => import('./components/Footer'));
+const ScrollToTop = dynamic(() => import('./components/ScrollToTop'), { ssr: false });
+const WhatsAppButton = dynamic(() => import('./components/WhatsAppButton'), { ssr: false });
 
 export default function Home() {
   useEffect(() => {
-    // Initialize storage on first load
     initializeStorage();
   }, []);
 

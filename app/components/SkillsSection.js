@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { getFromStorage, STORAGE_KEYS } from '@/lib/storage';
+import { DEFAULT_DATA, getFromStorage, STORAGE_KEYS } from '@/lib/storage';
 import { fadeUp, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
 import { getStableGradient } from './themePalette';
 
 export default function SkillsSection() {
-  const [skills, setSkills] = useState([]);
+  const [skills, setSkills] = useState(DEFAULT_DATA.skills);
 
   useEffect(() => {
     const loadSkills = () => {
-      setSkills(getFromStorage(STORAGE_KEYS.SKILLS, []));
+      setSkills(getFromStorage(STORAGE_KEYS.SKILLS, DEFAULT_DATA.skills));
     };
 
     loadSkills();

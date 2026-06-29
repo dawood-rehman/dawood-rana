@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaCode, FaExternalLinkAlt, FaGithub, FaServer } from 'react-icons/fa';
-import { getFromStorage, STORAGE_KEYS } from '@/lib/storage';
+import { DEFAULT_DATA, getFromStorage, STORAGE_KEYS } from '@/lib/storage';
 import { fadeUp, quickTransition, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
 import { getStableGradient } from './themePalette';
 
@@ -13,11 +13,11 @@ const icons = {
 };
 
 export default function ProjectsSection() {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState(DEFAULT_DATA.projects);
 
   useEffect(() => {
     const loadProjects = () => {
-      setProjects(getFromStorage(STORAGE_KEYS.PROJECTS, []));
+      setProjects(getFromStorage(STORAGE_KEYS.PROJECTS, DEFAULT_DATA.projects));
     };
 
     loadProjects();

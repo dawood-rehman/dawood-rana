@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaGraduationCap, FaSchool, FaUniversity } from 'react-icons/fa';
-import { getFromStorage, STORAGE_KEYS } from '@/lib/storage';
+import { DEFAULT_DATA, getFromStorage, STORAGE_KEYS } from '@/lib/storage';
 import { fadeUp, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
 import { getStableGradient } from './themePalette';
 
@@ -14,11 +14,11 @@ const icons = {
 };
 
 export default function EducationSection() {
-  const [education, setEducation] = useState([]);
+  const [education, setEducation] = useState(DEFAULT_DATA.education);
 
   useEffect(() => {
     const loadEducation = () => {
-      setEducation(getFromStorage(STORAGE_KEYS.EDUCATION, []));
+      setEducation(getFromStorage(STORAGE_KEYS.EDUCATION, DEFAULT_DATA.education));
     };
 
     loadEducation();
