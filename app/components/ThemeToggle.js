@@ -1,29 +1,29 @@
 'use client';
 
+import { FaMoon, FaSun } from 'react-icons/fa';
 import { useTheme } from './ThemeProvider';
-import { FaSun, FaMoon } from 'react-icons/fa';
 
 export default function ThemeToggle({ isMobile = false, onToggle }) {
   const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
 
   const handleToggle = () => {
     toggleTheme();
-    if (onToggle) {
-      onToggle();
-    }
+    onToggle?.();
   };
 
   if (isMobile) {
     return (
       <button
         onClick={handleToggle}
-        className="flex items-center gap-3 w-full px-4 py-3 rounded-lg bg-gradient-to-r from-slate-200 to-slate-100 dark:from-indigo-900 dark:to-purple-900 hover:from-slate-300 hover:to-slate-200 dark:hover:from-indigo-800 dark:hover:to-purple-800 text-slate-700 dark:text-indigo-100 transition-all duration-150 font-medium"
+        className="focus-ring flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm font-bold text-slate-800 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
         aria-label="Toggle theme"
       >
-        {theme === 'dark' ? <FaSun className="text-lg" /> : <FaMoon className="text-lg" />}
-        <span>
-          {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+        <span className="flex items-center gap-3">
+          {isDark ? <FaSun className="text-cyan-300" /> : <FaMoon className="text-blue-600" />}
+          {isDark ? 'Switch to light' : 'Switch to dark'}
         </span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{isDark ? 'Dark' : 'Light'}</span>
       </button>
     );
   }
@@ -31,12 +31,19 @@ export default function ThemeToggle({ isMobile = false, onToggle }) {
   return (
     <button
       onClick={handleToggle}
-      className="hidden md:flex fixed top-6 right-6 z-50 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 dark:from-amber-400 dark:via-orange-400 dark:to-red-400 text-white dark:text-slate-900 p-4 rounded-full shadow-lg hover:shadow-xl transition-shadow duration-150 border-2 border-white/30 dark:border-white/20 items-center justify-center"
+      className="focus-ring hidden h-10 w-[4.75rem] items-center rounded-full border border-slate-200 bg-white/85 p-1 shadow-sm backdrop-blur-xl hover:bg-white dark:border-slate-800 dark:bg-slate-950/80 dark:hover:bg-slate-900 md:flex"
       aria-label="Toggle theme"
-      title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+      title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
     >
-      {theme === 'dark' ? <FaSun className="text-lg" /> : <FaMoon className="text-lg" />}
+      <span
+        className={`flex h-8 w-8 items-center justify-center rounded-full shadow-sm ${
+          isDark
+            ? 'translate-x-8 bg-cyan-300 text-slate-950'
+            : 'translate-x-0 bg-blue-600 text-white'
+        }`}
+      >
+        {isDark ? <FaMoon className="text-sm" /> : <FaSun className="text-sm" />}
+      </span>
     </button>
   );
 }
-

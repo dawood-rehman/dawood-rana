@@ -1,36 +1,131 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Dawood Rehman Portfolio
+
+A modern portfolio website with a lightweight admin CMS for managing homepage content. The project is built with Next.js, React, Tailwind CSS, Framer Motion, and MongoDB.
+
+## Overview
+
+This portfolio is designed to present professional profile information, selected projects, skills, education, contact details, and resume access in a clean production-ready UI. The admin panel allows the portfolio owner to update the visible homepage sections without editing code.
+
+## Features
+
+- Responsive portfolio homepage
+- Light and dark theme support
+- Smooth, restrained page transitions
+- Admin dashboard for portfolio content
+- MongoDB-backed content persistence
+- Local browser cache for fast development previews
+- Resume upload support
+- Professional sections for About, Passion, Projects, Education, Skills, and Contact
+
+## Tech Stack
+
+- Next.js
+- React
+- Tailwind CSS
+- Framer Motion
+- MongoDB
+- Mongoose
+- React Icons
+- React Hot Toast
+
+## Project Structure
+
+```text
+app/
+  api/              API routes for admin auth, content, and resume upload
+  components/       Portfolio UI and admin dashboard components
+  context/          Admin authentication context
+lib/                Storage, MongoDB, and admin auth utilities
+models/             Mongoose schemas
+public/             Static assets such as images and resume files
+```
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a local environment file such as `.env.local` and add placeholder values for your own deployment:
+
+```env
+MONGODB_URI=your-mongodb-connection-string
+ADMIN_PASSWORD=your-secure-admin-password
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open the local URL printed by Next.js, usually:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Admin CMS
 
-## Learn More
+The admin dashboard is available at:
 
-To learn more about Next.js, take a look at the following resources:
+```text
+/admin
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The dashboard is intentionally scoped to the same sections visible on the homepage:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- About
+- Passion
+- Projects
+- Education
+- Skills
+- Contact
 
-## Deploy on Vercel
+When MongoDB is configured, content is saved through the `/api/content` routes. The app also keeps a local cached copy in the browser so development remains fast and resilient.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Environment Variables
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Use environment variables through your local `.env.local` file or your hosting provider dashboard.
+
+```env
+MONGODB_URI=your-mongodb-connection-string
+ADMIN_PASSWORD=your-secure-admin-password
+```
+
+Security notes:
+
+- Do not commit real `.env` files.
+- Do not place database credentials in `NEXT_PUBLIC_*` variables.
+- Use a strong admin password before deploying.
+- Rotate credentials if they are ever exposed.
+
+## Resume Handling
+
+Resume uploads are stored with a stable public filename such as `public/resume.pdf`. This works for local and traditional server deployments. For serverless deployments, use durable file storage such as object storage if uploaded files must persist across redeploys.
+
+## Scripts
+
+```bash
+npm run dev
+npm run build
+npm run start
+```
+
+## Production Checklist
+
+- Configure MongoDB in the deployment environment.
+- Set a strong admin password.
+- Verify the Resume button opens the correct CV.
+- Test both light and dark themes.
+- Run a production build before deployment.
+
+```bash
+npm run build
+```
+
+## Privacy
+
+This README intentionally uses placeholder environment values only. Do not add real passwords, database connection strings, tokens, or private credentials to documentation.

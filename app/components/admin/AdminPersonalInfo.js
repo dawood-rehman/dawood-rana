@@ -13,13 +13,6 @@ export default function AdminPersonalInfo() {
   });
   const [isEditing, setIsEditing] = useState(false);
 
-  const springTransition = {
-    type: 'spring',
-    stiffness: 300,
-    damping: 25,
-    duration: 0.35,
-  };
-
   useEffect(() => {
     loadPersonalInfo();
   }, []);
@@ -48,7 +41,7 @@ export default function AdminPersonalInfo() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <h2 className="text-2xl sm:text-3xl font-bold text-white">Personal Information</h2>
         {!isEditing && (

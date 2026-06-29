@@ -14,19 +14,19 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate async operation
-    setTimeout(() => {
-      const result = login(password);
+    try {
+      const result = await login(password);
       if (result.success) {
         toast.success('Login successful!');
         setPassword('');
         onLoginSuccess?.();
         onClose();
       } else {
-        toast.error('Invalid password');
+        toast.error(result.message || 'Invalid password');
       }
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   return (
@@ -48,27 +48,25 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
             initial={{ opacity: 0, scale: 0.9, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
-            transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
             className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md mx-auto px-4 sm:px-0"
           >
-            <div className="bg-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl border border-slate-700">
-              <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Admin Login</h2>
-              <p className="text-sm sm:text-base text-slate-400 mb-6">Enter your admin password to access the dashboard.</p>
+            <div className="glass-panel rounded-lg p-6 sm:p-8">
+              <h2 className="mb-2 text-xl font-black text-slate-950 dark:text-white sm:text-2xl">Admin Login</h2>
+              <p className="mb-6 text-sm text-slate-500 dark:text-slate-400 sm:text-base">Enter your admin password to access the dashboard.</p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-2">
+                  <label className="mb-2 block text-xs font-bold text-slate-600 dark:text-slate-300 sm:text-sm">
                     Password
                   </label>
-                  <motion.input
+                  <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
-                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-sm sm:text-base"
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-950 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 sm:px-4 sm:py-2.5 sm:text-base"
                     disabled={loading}
-                    whileFocus={{ scale: 1.01 }}
-                    transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
                   />
                 </div>
 
@@ -77,7 +75,7 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
                   disabled={loading || !password}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base shadow-lg hover:shadow-xl"
+                  className="btn-primary w-full px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-2.5 sm:text-base"
                 >
                   {loading ? 'Logging in...' : 'Login'}
                 </motion.button>
@@ -87,7 +85,7 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
                 onClick={onClose}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
-                className="mt-4 w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 transition-all text-sm sm:text-base font-medium"
+                className="btn-secondary mt-4 w-full px-3 py-2 text-sm sm:px-4 sm:py-2.5 sm:text-base"
               >
                 Cancel
               </motion.button>

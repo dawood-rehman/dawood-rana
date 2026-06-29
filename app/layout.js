@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/ThemeProvider";
+import ThemeScript from "./components/ThemeScript";
 import { AdminProvider } from "./context/AdminContext";
 import { Toaster } from "react-hot-toast";
 
@@ -26,6 +27,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -36,9 +40,10 @@ export default function RootLayout({ children }) {
               position="top-right"
               toastOptions={{
                 style: {
-                  background: '#1f2937',
-                  color: '#fff',
-                  border: '1px solid #374151',
+                  background: 'var(--surface-strong)',
+                  color: 'var(--foreground)',
+                  border: '1px solid var(--border)',
+                  boxShadow: 'var(--shadow-card)',
                 },
               }}
             />

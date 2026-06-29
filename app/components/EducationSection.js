@@ -1,111 +1,94 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaGraduationCap, FaSchool, FaUniversity } from 'react-icons/fa';
 import { getFromStorage, STORAGE_KEYS } from '@/lib/storage';
+import { fadeUp, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
+import { getStableGradient } from './themePalette';
+
+const icons = {
+  FaSchool,
+  FaGraduationCap,
+  FaUniversity,
+};
 
 export default function EducationSection() {
   const [education, setEducation] = useState([]);
 
   useEffect(() => {
     const loadEducation = () => {
-      const data = getFromStorage(STORAGE_KEYS.EDUCATION, []);
-      setEducation(data);
+      setEducation(getFromStorage(STORAGE_KEYS.EDUCATION, []));
     };
 
     loadEducation();
-
-    // Listen for storage changes
-    const handleStorageChange = () => {
-      loadEducation();
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('educationUpdated', handleStorageChange);
+    window.addEventListener('storage', loadEducation);
+    window.addEventListener('educationUpdated', loadEducation);
+    window.addEventListener('portfolioContentUpdated', loadEducation);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('educationUpdated', handleStorageChange);
+      window.removeEventListener('storage', loadEducation);
+      window.removeEventListener('educationUpdated', loadEducation);
+      window.removeEventListener('portfolioContentUpdated', loadEducation);
     };
   }, []);
 
-  const getIcon = (iconName) => {
-    const icons = {
-      FaSchool,
-      FaGraduationCap,
-      FaUniversity,
-    };
-    return icons[iconName] || FaGraduationCap;
-  };
-
   return (
-    <section id="education" className="min-h-screen flex items-center justify-center py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 relative overflow-hidden">
-      {/* Enhanced background with animated gradients */}
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-900 via-purple-900 to-fuchsia-900 dark:from-slate-950 dark:via-violet-950 dark:to-purple-950">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(139,92,246,0.3),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(236,72,153,0.2),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-      </div>
-      <div className="max-w-6xl mx-auto relative z-10">
-        <motion.h2
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-8 sm:mb-12 md:mb-16 bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent"
+    <section id="education" className="section-frame">
+      <div className="section-container">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={staggerContainer}
+          className="mx-auto max-w-3xl text-center"
         >
-          Education
-        </motion.h2>
+          <motion.div variants={fadeUp} transition={smoothTransition} className="mx-auto mb-5 eyebrow">
+            Background
+          </motion.div>
+          <motion.h2 variants={fadeUp} transition={smoothTransition} className="section-title">
+            Education
+          </motion.h2>
+          <motion.p variants={fadeUp} transition={smoothTransition} className="section-copy mt-5">
+            A learning path shaped by science, computer science, and practical development.
+          </motion.p>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-          {education.map((edu, index) => (
-            <motion.div
-              key={edu.id || index}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: index * 0.08, ease: [0.34, 1.56, 0.64, 1] }}
-              className="bg-white/10 dark:bg-slate-800/50 backdrop-blur-xl rounded-lg sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl hover:shadow-3xl transition-all duration-300 border border-white/20 dark:border-slate-700/50"
-            >
-              <motion.div 
-                className={`w-12 sm:w-16 h-12 sm:h-16 rounded-full bg-gradient-to-br ${edu.color} flex items-center justify-center mb-4 sm:mb-6 mx-auto relative overflow-hidden`}
-                transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={staggerContainer}
+          className="relative mt-10 grid gap-5 md:grid-cols-3"
+        >
+          <div className="pointer-events-none absolute left-[16%] right-[16%] top-12 hidden h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-700 md:block" />
+          {education.map((edu, index) => {
+            const Icon = icons[edu.icon] || FaGraduationCap;
+            const accentGradient = getStableGradient(edu.title, index);
+
+            return (
+              <motion.article
+                key={edu.id || edu.title}
+                variants={fadeUp}
+                transition={smoothTransition}
+                className="quiet-card elevated-card relative p-6 text-center hover:-translate-y-1"
               >
-                {/* Rotating gradient ring */}
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  animate={{
-                    background: [
-                      `conic-gradient(from 0deg, transparent, ${edu.color.includes('blue') ? 'rgba(59,130,246,0.5)' : edu.color.includes('purple') ? 'rgba(139,92,246,0.5)' : 'rgba(249,115,22,0.5)'}, transparent)`,
-                      `conic-gradient(from 360deg, transparent, ${edu.color.includes('blue') ? 'rgba(59,130,246,0.5)' : edu.color.includes('purple') ? 'rgba(139,92,246,0.5)' : 'rgba(249,115,22,0.5)'}, transparent)`,
-                    ],
-                  }}
-                  transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 2, ease: 'linear' }}
-                />
-                {getIcon(edu.icon) && getIcon(edu.icon)({ className: "text-white text-lg sm:text-2xl relative z-10" })}
-              </motion.div>
-              <motion.h3 
-                className="text-lg sm:text-xl md:text-2xl font-bold text-center mb-1 sm:mb-2 text-white dark:text-slate-100"
-                transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
-              >
-                {edu.title}
-              </motion.h3>
-              <motion.p 
-                className="text-sm sm:text-base md:text-lg text-center mb-1 sm:mb-2 text-slate-200 dark:text-slate-300 font-semibold"
-              >
-                {edu.institution}
-              </motion.p>
-              <motion.p 
-                className="text-xs sm:text-sm text-center text-slate-300 dark:text-slate-400"
-              >
-                {edu.stream}
-              </motion.p>
-            </motion.div>
-          ))}
-        </div>
+                <span className="mb-4 inline-flex rounded-full border border-slate-200 bg-white/70 px-3 py-1 text-xs font-black uppercase text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-400">
+                  Step {String(index + 1).padStart(2, '0')}
+                </span>
+                <div className={`mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white shadow-md ring-4 ring-white/70 dark:ring-slate-950/70`}>
+                  <Icon />
+                </div>
+                <h3 className="text-lg font-bold text-slate-950 dark:text-white">{edu.title}</h3>
+                <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-300">{edu.institution}</p>
+                {edu.stream && (
+                  <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{edu.stream}</p>
+                )}
+              </motion.article>
+            );
+          })}
+        </motion.div>
       </div>
     </section>
   );
 }
-

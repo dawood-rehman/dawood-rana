@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { FaUndo, FaRedo, FaSun, FaImage, FaCheck, FaTimes } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
 
 export default function AdminProfilePicture() {
   const [profileImage, setProfileImage] = useState('');
@@ -25,7 +26,7 @@ export default function AdminProfilePicture() {
 
   // Load profile picture from storage
   useEffect(() => {
-    const savedImage = localStorage.getItem('cms_profilePicture');
+    const savedImage = getFromStorage(STORAGE_KEYS.PROFILE_PICTURE, '');
     if (savedImage) {
       setProfileImage(savedImage);
       setPreviewImage(savedImage);
@@ -148,7 +149,7 @@ export default function AdminProfilePicture() {
 
     // Convert canvas to data URL and save
     const editedImage = canvas.toDataURL('image/jpeg', 0.95);
-    localStorage.setItem('cms_profilePicture', editedImage);
+    saveToStorage(STORAGE_KEYS.PROFILE_PICTURE, editedImage);
     setProfileImage(editedImage);
     setIsEditing(false);
     setLoading(false);

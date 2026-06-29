@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useAdmin } from '@/app/context/AdminContext';
 import { useRouter } from 'next/navigation';
+import { useAdmin } from '@/app/context/AdminContext';
 import AdminLoginModal from './AdminLoginModal';
-import toast from 'react-hot-toast';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -16,50 +14,34 @@ export default function Footer() {
   const handleNameClick = () => {
     if (isAuthenticated) {
       router.push('/admin');
-    } else {
-      setIsLoginOpen(true);
+      return;
     }
-  };
 
-  const handleLoginSuccess = () => {
-    router.push('/admin');
+    setIsLoginOpen(true);
   };
 
   return (
     <>
-      <footer className="relative py-6 sm:py-8 px-3 sm:px-4 border-t border-slate-200/20 dark:border-slate-700/50">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-black dark:via-slate-950 dark:to-black opacity-50"></div>
-        
-        <div className="w-full max-w-7xl mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-            className="text-center"
+      <footer className="border-t border-slate-200/80 px-4 py-8 dark:border-slate-800">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            &copy; {currentYear} Dawood Rehman. All rights reserved.
+          </p>
+          <button
+            onClick={handleNameClick}
+            className="focus-ring rounded-full px-3 py-2 text-sm font-bold text-slate-800 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-900"
+            title={isAuthenticated ? 'Go to admin panel' : 'Admin login'}
           >
-            <p className="text-slate-400 dark:text-slate-500 text-xs sm:text-sm md:text-base">
-              © {currentYear} Copyright:{' '}
-              <motion.button
-                onClick={handleNameClick}
-                transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
-                className="font-semibold text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text cursor-pointer hover:opacity-80 transition-opacity inline-block"
-                title={isAuthenticated ? 'Go to Admin Panel' : 'Click to login'}
-              >
-                Dawood Rehman
-              </motion.button>
-            </p>
-          </motion.div>
+            Admin
+          </button>
         </div>
       </footer>
 
-      <AdminLoginModal 
-        isOpen={isLoginOpen} 
+      <AdminLoginModal
+        isOpen={isLoginOpen}
         onClose={() => setIsLoginOpen(false)}
-        onLoginSuccess={handleLoginSuccess}
+        onLoginSuccess={() => router.push('/admin')}
       />
     </>
   );
 }
-

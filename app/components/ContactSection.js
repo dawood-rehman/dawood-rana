@@ -1,10 +1,31 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaFacebook, FaInstagram, FaLinkedin, FaGithub, FaWhatsapp, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
-import CrystalEffect from './CrystalEffect';
+import {
+  FaEnvelope,
+  FaFacebook,
+  FaGithub,
+  FaInstagram,
+  FaLinkedin,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaWhatsapp,
+} from 'react-icons/fa';
 import { getFromStorage, STORAGE_KEYS } from '@/lib/storage';
+import { fadeUp, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
+import { getStableGradient } from './themePalette';
+
+const icons = {
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaGithub,
+  FaWhatsapp,
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+};
 
 export default function ContactSection() {
   const [socialLinks, setSocialLinks] = useState([]);
@@ -12,191 +33,128 @@ export default function ContactSection() {
 
   useEffect(() => {
     const loadData = () => {
-      const socials = getFromStorage(STORAGE_KEYS.SOCIAL_LINKS, []);
-      const contacts = getFromStorage(STORAGE_KEYS.CONTACT_INFO, []);
-      setSocialLinks(socials);
-      setContactInfo(contacts);
+      setSocialLinks(getFromStorage(STORAGE_KEYS.SOCIAL_LINKS, []));
+      setContactInfo(getFromStorage(STORAGE_KEYS.CONTACT_INFO, []));
     };
 
     loadData();
-
-    // Listen for storage changes
-    const handleStorageChange = () => {
-      loadData();
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('contactUpdated', handleStorageChange);
-    window.addEventListener('socialsUpdated', handleStorageChange);
+    window.addEventListener('storage', loadData);
+    window.addEventListener('contactUpdated', loadData);
+    window.addEventListener('socialsUpdated', loadData);
+    window.addEventListener('portfolioContentUpdated', loadData);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('contactUpdated', handleStorageChange);
-      window.removeEventListener('socialsUpdated', handleStorageChange);
+      window.removeEventListener('storage', loadData);
+      window.removeEventListener('contactUpdated', loadData);
+      window.removeEventListener('socialsUpdated', loadData);
+      window.removeEventListener('portfolioContentUpdated', loadData);
     };
   }, []);
 
-  const getIcon = (iconName) => {
-    const icons = {
-      FaFacebook,
-      FaInstagram,
-      FaLinkedin,
-      FaGithub,
-      FaWhatsapp,
-      FaEnvelope,
-      FaPhone,
-      FaMapMarkerAlt,
-    };
-    return icons[iconName] || FaEnvelope;
-  };
-
   return (
-    <section id="contact" className="min-h-screen flex items-center justify-center py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 relative overflow-hidden">
-      {/* Enhanced animated background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 dark:from-slate-950 dark:via-indigo-950 dark:to-purple-950">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,rgba(99,102,241,0.4),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(219,39,119,0.3),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.2),transparent_50%)]"></div>
-        <div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2V0h2v22H20v2h2v2h-2v2h2v2h-2v2h2v2H0v-2h20v-2H0v-2h20v-2H0v-2h20zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20z'/%3E%3C/g%3E%3C/svg%3E")`
-          }}
-        ></div>
-      </div>
-
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
+    <section id="contact" className="section-frame">
+      <div className="section-container">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-          className="text-center mb-8 sm:mb-12 md:mb-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={staggerContainer}
+          className="mx-auto max-w-3xl text-center"
         >
-          <motion.h2
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
-          >
-            Get In Touch
+          <motion.div variants={fadeUp} transition={smoothTransition} className="mx-auto mb-5 eyebrow">
+            Contact
+          </motion.div>
+          <motion.h2 variants={fadeUp} transition={smoothTransition} className="section-title">
+            Let&apos;s Build Something Clean
           </motion.h2>
-          <CrystalEffect className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-200 dark:text-slate-300 max-w-3xl mx-auto px-2">
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              Let's connect and build something amazing together!
-            </motion.p>
-          </CrystalEffect>
+          <motion.p variants={fadeUp} transition={smoothTransition} className="section-copy mt-5">
+            Reach out for portfolio work, web applications, dashboards, or collaboration.
+          </motion.p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 mb-8 sm:mb-10 md:mb-12">
-          {/* Contact Information Cards */}
-          <div className="space-y-3 sm:space-y-4 md:space-y-5">
-            {contactInfo.map((info, index) => (
-              <motion.a
-                key={info.id || index}
-                href={info.link || '#'}
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.1, ease: [0.34, 1.56, 0.64, 1] }}
-                className="block"
-              >
-                <CrystalEffect className="bg-white/10 dark:bg-slate-800/50 backdrop-blur-xl rounded-lg sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-white/20 dark:border-slate-700/50 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <motion.div
-                      className="w-10 sm:w-12 md:w-14 h-10 sm:h-12 md:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
-                      transition={{ duration: 0.35, ease: [0.165, 0.84, 0.44, 1] }}
-                    >
-                      {getIcon(info.icon)({ className: "text-white text-sm sm:text-base md:text-lg" })}
-                    </motion.div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-500 mb-0.5 truncate">{info.label}</p>
-                      <p className="text-sm sm:text-base md:text-lg font-semibold text-white dark:text-slate-200 truncate">{info.value}</p>
-                    </div>
-                  </div>
-                </CrystalEffect>
-              </motion.a>
-            ))}
-          </div>
+        <div className="mt-10 grid gap-5 lg:grid-cols-[0.92fr_1.08fr]">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            variants={staggerContainer}
+            className="grid gap-4"
+          >
+            {contactInfo.map((info) => {
+              const Icon = icons[info.icon] || FaEnvelope;
 
-          {/* Social Media Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-3 sm:gap-4 md:gap-5">
-            {socialLinks.map((social, index) => (
-              <motion.a
-                key={social.id || index}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ 
-                  delay: index * 0.1,
-                  duration: 0.3,
-                  ease: [0.34, 1.56, 0.64, 1]
-                }}
-                whileTap={{ scale: 0.95 }}
-                className="group relative"
-              >
-                {/* Glow effect */}
-                <div className={`absolute -inset-1 bg-gradient-to-br ${social.color} rounded-lg sm:rounded-2xl blur-lg opacity-0 group-hover:opacity-75 transition-opacity duration-300`}></div>
-                
-                <CrystalEffect className={`relative bg-gradient-to-br ${social.color} rounded-lg sm:rounded-2xl p-3 sm:p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 text-white h-full flex flex-col items-center justify-center`}>
-                  <motion.div
-                    transition={{ duration: 0.35, ease: [0.165, 0.84, 0.44, 1] }}
-                    className="mb-2 sm:mb-3"
-                  >
-                    {getIcon(social.icon)({ className: "text-2xl sm:text-3xl md:text-4xl" })}
-                  </motion.div>
-                  <h3 className="text-xs sm:text-sm md:text-lg font-bold mb-0.5 sm:mb-1 text-center line-clamp-1">{social.name}</h3>
-                  <p className="text-[10px] sm:text-xs opacity-90 text-center line-clamp-2 leading-tight">{social.description}</p>
-                  
-                  {/* Animated border */}
-                  <motion.div
-                    className="absolute inset-0 rounded-lg sm:rounded-2xl border border-white/30"
-                    animate={{
-                      borderColor: [
-                        'rgba(255,255,255,0.3)',
-                        'rgba(255,255,255,0.6)',
-                        'rgba(255,255,255,0.3)',
-                      ],
-                    }}
-                    transition={{
-                      duration: 0.8,
-                      repeat: Infinity,
-                      repeatDelay: 2,
-                      ease: 'easeInOut',
-                    }}
-                  />
-                </CrystalEffect>
-              </motion.a>
-            ))}
-          </div>
-        </div>
+              return (
+                <motion.a
+                  key={info.id || info.label}
+                  href={info.link || '#'}
+                  variants={fadeUp}
+                  transition={smoothTransition}
+                  className="quiet-card elevated-card focus-ring flex items-center gap-4 p-5 hover:-translate-y-1"
+                >
+                  <span className="icon-tile h-12 w-12 flex-shrink-0">
+                    <Icon />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                      {info.label}
+                    </span>
+                    <span className="mt-1 block break-words text-sm font-bold leading-6 text-slate-950 dark:text-white sm:text-base">
+                      {info.value}
+                    </span>
+                  </span>
+                </motion.a>
+              );
+            })}
+          </motion.div>
 
-        {/* Call to Action */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35, delay: 0.3 }}
-          className="text-center px-4"
-        >
-          <CrystalEffect className="inline-block bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-[2px] rounded-full hover:shadow-xl transition-shadow duration-300">
-            <div className="bg-slate-900 dark:bg-slate-800 rounded-full px-6 sm:px-8 py-3 sm:py-4">
-              <p className="text-sm sm:text-base md:text-lg text-slate-200 dark:text-slate-300 font-semibold">
-                Ready to start a project? Let's talk! 💬
-              </p>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            variants={staggerContainer}
+            className="glass-panel elevated-card p-5 sm:p-6"
+          >
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h3 className="text-2xl font-black text-slate-950 dark:text-white">Social Profiles</h3>
+                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                  Professional links and direct channels.
+                </p>
+              </div>
             </div>
-          </CrystalEffect>
-        </motion.div>
+
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {socialLinks.map((social, index) => {
+                const Icon = icons[social.icon] || FaGithub;
+                const accentGradient = getStableGradient(social.name, index);
+
+                return (
+                  <motion.a
+                    key={social.id || social.name}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variants={fadeUp}
+                    transition={smoothTransition}
+                    className="focus-ring rounded-lg border border-slate-200 bg-white/70 p-4 hover:-translate-y-1 hover:border-slate-300 hover:bg-white dark:border-slate-800 dark:bg-slate-900/70 dark:hover:border-slate-700 dark:hover:bg-slate-900"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${accentGradient} text-white shadow-sm`}>
+                        <Icon />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block font-bold text-slate-950 dark:text-white">{social.name}</span>
+                        <span className="mt-0.5 block truncate text-xs text-slate-500 dark:text-slate-400">
+                          {social.description}
+                        </span>
+                      </span>
+                    </div>
+                  </motion.a>
+                );
+              })}
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

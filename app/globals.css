@@ -1,8 +1,43 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  color-scheme: light;
+  --background: #f6f8fb;
+  --foreground: #111827;
+  --surface: rgba(255, 255, 255, 0.86);
+  --surface-strong: #ffffff;
+  --surface-muted: #edf2f7;
+  --muted: #667085;
+  --border: rgba(16, 24, 40, 0.1);
+  --accent: #2563eb;
+  --accent-strong: #14b8a6;
+  --accent-soft: rgba(37, 99, 235, 0.12);
+  --halo-one: rgba(37, 99, 235, 0.14);
+  --halo-two: rgba(20, 184, 166, 0.11);
+  --halo-three: rgba(124, 58, 237, 0.08);
+  --shadow-soft: 0 20px 70px rgba(16, 24, 40, 0.1);
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.06), 0 18px 50px rgba(16, 24, 40, 0.08);
+}
+
+html.dark {
+  color-scheme: dark;
+  --background: #070b13;
+  --foreground: #f8fafc;
+  --surface: rgba(12, 18, 31, 0.8);
+  --surface-strong: #0c1220;
+  --surface-muted: #111a2c;
+  --muted: #a2adbd;
+  --border: rgba(226, 232, 240, 0.14);
+  --accent: #38bdf8;
+  --accent-strong: #34d399;
+  --accent-soft: rgba(56, 189, 248, 0.12);
+  --halo-one: rgba(56, 189, 248, 0.1);
+  --halo-two: rgba(52, 211, 153, 0.09);
+  --halo-three: rgba(167, 139, 250, 0.08);
+  --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.38);
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04), 0 26px 80px rgba(0, 0, 0, 0.34);
 }
 
 @theme inline {
@@ -14,27 +49,359 @@
 
 html {
   scroll-behavior: smooth;
-  color-scheme: light dark;
-}
-
-html.dark {
-  --background: #0f172a;
-  --foreground: #f8fafc;
+  scroll-padding-top: 4.5rem;
 }
 
 body {
-  background: var(--background);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 12% 8%, var(--halo-one), transparent 30rem),
+    radial-gradient(circle at 88% 14%, var(--halo-two), transparent 28rem),
+    radial-gradient(circle at 50% 90%, var(--halo-three), transparent 32rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), transparent 18rem),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  overflow-x: hidden;
-  transition: background-color 150ms, color 150ms;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+html.dark body {
+  background:
+    radial-gradient(circle at 18% 4%, var(--halo-one), transparent 32rem),
+    radial-gradient(circle at 90% 10%, var(--halo-two), transparent 30rem),
+    radial-gradient(circle at 50% 100%, var(--halo-three), transparent 34rem),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.42), transparent 20rem),
+    var(--background);
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* Smooth animations for theme transitions */
-button, input, textarea, select {
-  transition: background-color 150ms, color 150ms, border-color 150ms;
+button,
+input,
+textarea,
+select,
+a {
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    opacity 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+.section-frame {
+  position: relative;
+  overflow: hidden;
+  padding: 5rem 1rem;
+}
+
+.hero-section {
+  min-height: min(880px, 100svh);
+  padding-top: 7rem;
+  padding-bottom: 4rem;
+}
+
+.section-frame:nth-of-type(even) {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-muted) 42%, transparent), transparent 58%),
+    radial-gradient(circle at 8% 24%, color-mix(in srgb, var(--accent-soft) 72%, transparent), transparent 24rem);
+}
+
+.section-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--border) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--border) 70%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+  opacity: 0.75;
+}
+
+.section-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  color: color-mix(in srgb, var(--accent) 74%, var(--foreground));
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  color: var(--foreground);
+  font-size: clamp(2rem, 4.5vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.section-copy {
+  color: var(--muted);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.75;
+}
+
+.glass-panel,
+.quiet-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(18px);
+}
+
+.glass-panel {
+  border-radius: 1rem;
+}
+
+.quiet-card {
+  border-radius: 0.5rem;
+}
+
+.quiet-card:hover,
+.glass-panel:hover {
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--border));
+}
+
+.elevated-card {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 72%, transparent), transparent),
+    var(--surface);
+}
+
+.premium-gradient {
+  background-image: linear-gradient(135deg, var(--accent), var(--accent-strong));
+}
+
+.premium-text {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-primary,
+.btn-secondary,
+.icon-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.625rem;
+  font-weight: 800;
+}
+
+.btn-primary {
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 96%, white), var(--accent-strong));
+  color: #ffffff;
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+html.dark .btn-primary {
+  color: #04111d;
+  box-shadow: 0 18px 48px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 44px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+.btn-secondary {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-strong) 82%, transparent);
+  color: var(--foreground);
+  box-shadow: 0 10px 26px rgba(16, 24, 40, 0.06);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent) 34%, var(--border));
+  background: var(--surface-strong);
+}
+
+.icon-tile {
+  background:
+    radial-gradient(circle at 25% 15%, rgba(255, 255, 255, 0.32), transparent 32%),
+    linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #ffffff;
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+html.dark .icon-tile {
+  color: #04111d;
+}
+
+.btn-primary.rounded-full,
+.btn-secondary.rounded-full,
+.icon-tile.rounded-full {
+  border-radius: 9999px;
+}
+
+.admin-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 8% 4%, var(--halo-one), transparent 30rem),
+    radial-gradient(circle at 92% 0%, var(--halo-two), transparent 28rem),
+    var(--background);
+  color: var(--foreground);
+}
+
+.admin-shell-header {
+  border-color: var(--border);
+  background: color-mix(in srgb, var(--surface-strong) 88%, transparent);
+}
+
+.admin-tab-active {
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #ffffff;
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+html.dark .admin-tab-active {
+  color: #04111d;
+}
+
+.admin-tab-idle {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  color: var(--muted);
+}
+
+.admin-tab-idle:hover {
+  background: var(--surface-strong);
+  color: var(--foreground);
+}
+
+.admin-shell [class*="bg-slate-950"],
+.admin-shell [class*="bg-slate-900"],
+.admin-shell [class*="bg-slate-800"],
+.admin-shell [class*="bg-slate-700"] {
+  background-color: var(--surface-strong);
+}
+
+.admin-shell [class*="bg-gradient-to-br"][class*="from-slate-800"],
+.admin-shell [class*="bg-gradient-to-br"][class*="from-slate-900"],
+.admin-shell [class*="bg-gradient-to-r"][class*="from-slate-800"],
+.admin-shell [class*="bg-gradient-to-r"][class*="from-slate-900"] {
+  background-image: none;
+  background-color: var(--surface-strong);
+}
+
+.admin-shell [class*="border-slate-"] {
+  border-color: var(--border);
+}
+
+.admin-shell h1,
+.admin-shell h2,
+.admin-shell h3,
+.admin-shell label,
+.admin-shell input,
+.admin-shell textarea,
+.admin-shell select {
+  color: var(--foreground);
+}
+
+.admin-shell [class*="text-slate-300"],
+.admin-shell [class*="text-slate-400"],
+.admin-shell [class*="text-slate-500"] {
+  color: var(--muted);
+}
+
+.admin-shell input,
+.admin-shell textarea,
+.admin-shell select {
+  background: color-mix(in srgb, var(--surface-muted) 72%, var(--surface-strong));
+  border-color: var(--border);
+}
+
+.admin-shell input::placeholder,
+.admin-shell textarea::placeholder {
+  color: color-mix(in srgb, var(--muted) 70%, transparent);
+}
+
+.admin-shell button[class*="bg-slate-"],
+.admin-shell a[class*="bg-slate-"] {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-muted) 74%, var(--surface-strong));
+  color: var(--foreground);
+}
+
+.admin-shell button[class*="bg-slate-"]:hover,
+.admin-shell a[class*="bg-slate-"]:hover {
+  background: var(--surface-muted);
+}
+
+.admin-shell [class*="bg-gradient"] [class~="text-white"],
+.admin-shell [class*="bg-gradient"] h3,
+.admin-shell [class*="bg-gradient"] p {
+  color: #ffffff;
+}
+
+html.dark .admin-shell [class*="bg-gradient"] [class~="text-white"],
+html.dark .admin-shell [class*="bg-gradient"] h3,
+html.dark .admin-shell [class*="bg-gradient"] p {
+  color: #ffffff;
+}
+
+.accent-text {
+  color: var(--accent);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .section-frame {
+    padding: 4rem 1rem;
+  }
+
+  .hero-section {
+    min-height: auto;
+    padding-top: 6rem;
+    padding-bottom: 3.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

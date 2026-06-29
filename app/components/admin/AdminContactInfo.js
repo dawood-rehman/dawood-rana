@@ -290,12 +290,9 @@ export default function AdminContactInfo() {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {contacts.map((contact, index) => (
+          {socials.map((social) => (
             <div
               key={social.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: index * 0.08, duration: 0.35, ease: 'easeOut' }}
               className={`bg-gradient-to-br ${social.color} rounded-lg p-3 sm:p-4 hover:shadow-lg transition-shadow`}
             >
               <div className="flex justify-between items-start mb-2">

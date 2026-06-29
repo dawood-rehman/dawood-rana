@@ -54,13 +54,18 @@ export default function AdminResume() {
       <div className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-lg p-4 sm:p-6 border border-slate-600">
         <p className="text-sm text-slate-300 mb-3">Upload a PDF or DOCX resume. Once uploaded, it will be available at <span className="text-cyan-400">/resume.pdf</span> for visitors to download.</p>
 
-        <div className="flex gap-3 items-center">
-          <input type="file" accept=".pdf,.doc,.docx" onChange={handleFileChange} />
-          <button onClick={handleUpload} disabled={uploading} className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={handleFileChange}
+            className="w-full text-sm text-slate-300 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-700 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white sm:w-auto"
+          />
+          <button onClick={handleUpload} disabled={uploading} className="min-h-11 rounded-lg bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-sm font-bold text-white transition-colors duration-150 hover:from-indigo-700 hover:to-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
             <FaUpload className="inline mr-2" /> {uploading ? 'Uploading...' : 'Upload'}
           </button>
           {resumeUrl && (
-            <a href={resumeUrl} download className="ml-2 px-3 py-2 bg-slate-700 text-white rounded inline-flex items-center gap-2">
+            <a href={resumeUrl} download className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-slate-700 px-3 py-2 text-sm font-bold text-white transition-colors duration-150 hover:bg-slate-600 sm:ml-1">
               <FaDownload /> Download current
             </a>
           )}

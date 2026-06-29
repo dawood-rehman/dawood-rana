@@ -1,40 +1,37 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { FaArrowLeft, FaSignOutAlt, FaLock } from 'react-icons/fa';
-import { useAdmin } from '@/app/context/AdminContext';
+import { useEffect, useState } from 'react';
+import {
+  FaAddressBook,
+  FaArrowLeft,
+  FaFolderOpen,
+  FaGraduationCap,
+  FaRocket,
+  FaSignOutAlt,
+  FaTools,
+  FaUser,
+} from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-
-// Tab components imports
+import { useAdmin } from '@/app/context/AdminContext';
+import AdminAbout from './admin/AdminAbout';
+import AdminContactInfo from './admin/AdminContactInfo';
+import AdminEducation from './admin/AdminEducation';
+import AdminPassion from './admin/AdminPassion';
 import AdminProjects from './admin/AdminProjects';
 import AdminSkills from './admin/AdminSkills';
-import AdminEducation from './admin/AdminEducation';
-import AdminContactInfo from './admin/AdminContactInfo';
-import AdminPersonalInfo from './admin/AdminPersonalInfo';
-import AdminWorkExperience from './admin/AdminWorkExperience';
-import AdminCertifications from './admin/AdminCertifications';
-import AdminAchievements from './admin/AdminAchievements';
-import AdminPassword from './admin/AdminPassword';
-import AdminProfilePicture from './admin/AdminProfilePicture';
-import AdminResume from './admin/AdminResume';
 
 const tabs = [
-  { id: 'profile-pic', label: 'Profile Picture', icon: '🖼️' },
-  { id: 'resume', label: 'Resume', icon: '📄' },
-  { id: 'projects', label: 'Projects', icon: '📁' },
-  { id: 'skills', label: 'Skills', icon: '⚙️' },
-  { id: 'education', label: 'Education', icon: '🎓' },
-  { id: 'contact', label: 'Contact Info', icon: '📞' },
-  { id: 'personal', label: 'Personal Info', icon: '👤' },
-  { id: 'experience', label: 'Work Experience', icon: '💼' },
-  { id: 'certifications', label: 'Certifications', icon: '📜' },
-  { id: 'achievements', label: 'Achievements', icon: '🏆' },
-  { id: 'password', label: 'Change Password', icon: '🔐' },
+  { id: 'about', label: 'About', helper: 'Profile, bio, resume', icon: FaUser },
+  { id: 'passion', label: 'Passion', helper: 'Focus cards', icon: FaRocket },
+  { id: 'projects', label: 'Projects', helper: 'Portfolio work', icon: FaFolderOpen },
+  { id: 'education', label: 'Education', helper: 'Academic timeline', icon: FaGraduationCap },
+  { id: 'skills', label: 'Skills', helper: 'Tech stack', icon: FaTools },
+  { id: 'contact', label: 'Contact', helper: 'Info and socials', icon: FaAddressBook },
 ];
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('projects');
+  const [activeTab, setActiveTab] = useState('about');
   const { isAuthenticated, loading, logout } = useAdmin();
   const router = useRouter();
 
@@ -52,98 +49,94 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <div className="text-slate-400">Loading...</div>
+      <div className="admin-shell flex min-h-screen items-center justify-center">
+        <div className="rounded-lg border border-slate-700 bg-slate-800 px-5 py-3 text-sm font-semibold text-slate-400">
+          Loading dashboard...
+        </div>
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  if (!isAuthenticated) return null;
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'profile-pic':
-        return <AdminProfilePicture />;
-      case 'resume':
-        return <AdminResume />;
+      case 'about':
+        return <AdminAbout />;
+      case 'passion':
+        return <AdminPassion />;
       case 'projects':
         return <AdminProjects />;
-      case 'skills':
-        return <AdminSkills />;
       case 'education':
         return <AdminEducation />;
+      case 'skills':
+        return <AdminSkills />;
       case 'contact':
         return <AdminContactInfo />;
-      case 'personal':
-        return <AdminPersonalInfo />;
-      case 'experience':
-        return <AdminWorkExperience />;
-      case 'certifications':
-        return <AdminCertifications />;
-      case 'achievements':
-        return <AdminAchievements />;
-      case 'password':
-        return <AdminPassword />;
       default:
-        return <AdminProjects />;
+        return <AdminAbout />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700 sticky top-0 z-40">
-        <div className="w-full px-3 sm:px-4 py-3 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
-          <button
-            onClick={() => router.push('/')}
-            className="flex items-center gap-2 text-slate-300 hover:text-white transition-all text-sm sm:text-base duration-150 hover:translate-x-0.5"
-          >
-            <FaArrowLeft className="text-xs sm:text-base" />
-            <span className="hidden sm:inline">Back to Portfolio</span>
-            <span className="sm:hidden">Back</span>
-          </button>
-          <h1 className="text-xl sm:text-2xl font-bold text-white text-center">Admin Dashboard</h1>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-lg transition-all text-sm sm:text-base duration-150 font-medium"
-          >
-            <FaSignOutAlt className="text-xs sm:text-base" />
-            <span className="hidden sm:inline">Logout</span>
-          </button>
+    <div className="admin-shell min-h-screen">
+      <header className="admin-shell-header sticky top-0 z-40 border-b backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <button
+              onClick={() => router.push('/')}
+              className="btn-secondary flex min-h-11 items-center justify-center gap-2 px-3 py-2 text-sm sm:w-auto"
+            >
+              <FaArrowLeft className="text-xs" />
+              Back to Portfolio
+            </button>
+            <div className="text-center sm:text-left">
+              <h1 className="text-xl font-black sm:text-2xl">Admin Dashboard</h1>
+              <p className="mt-1 text-xs text-slate-500">
+                Manage only the sections that appear on the portfolio homepage.
+              </p>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="flex min-h-11 items-center justify-center gap-2 rounded-lg bg-red-600 px-3 py-2 text-sm font-bold text-white transition-colors duration-150 hover:bg-red-700"
+            >
+              <FaSignOutAlt className="text-xs" />
+              Logout
+            </button>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* Main Content */}
-      <div className="w-full px-3 sm:px-4 py-6 sm:py-8">
-        {/* Tabs Navigation */}
-        <div className="mb-6 sm:mb-8">
-          <div className="flex flex-wrap gap-2 pb-4 border-b border-slate-700 overflow-x-auto scrollbar-hide">
-            {tabs.map((tab) => (
+      <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <nav
+          className="mb-6 grid grid-cols-2 gap-2 rounded-lg border border-slate-800 bg-slate-900/40 p-2 sm:grid-cols-3 lg:grid-cols-6"
+          aria-label="Admin sections"
+        >
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+
+            return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg whitespace-nowrap transition-all text-xs sm:text-sm font-medium duration-150 ${
-                  activeTab === tab.id
-                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                className={`min-h-16 rounded-lg px-3 py-3 text-left transition-colors duration-150 ${
+                  isActive ? 'admin-tab-active' : 'admin-tab-idle'
                 }`}
+                aria-pressed={isActive}
               >
-                {tab.icon} <span className="hidden sm:inline">{tab.label}</span>
+                <span className="flex items-center gap-2 text-sm font-black">
+                  <Icon className="text-xs" />
+                  {tab.label}
+                </span>
+                <span className="mt-1 block text-xs font-medium opacity-75">{tab.helper}</span>
               </button>
-            ))}
-          </div>
-        </div>
+            );
+          })}
+        </nav>
 
-        {/* Tab Content */}
-        <div
-          key={activeTab}
-          className="transition-all duration-200"
-        >
-          {renderTabContent()}
-        </div>
-      </div>
+        <section key={activeTab}>{renderTabContent()}</section>
+      </main>
     </div>
   );
 }

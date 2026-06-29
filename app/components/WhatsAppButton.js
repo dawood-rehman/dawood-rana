@@ -12,12 +12,13 @@ export default function WhatsAppButton() {
       href={`https://wa.me/${whatsappNumber}?text=${message}`}
       target="_blank"
       rel="noopener noreferrer"
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      className="fixed right-6 bottom-6 md:right-auto md:left-6 z-50 bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 text-white p-4 rounded-full shadow-2xl hover:shadow-green-500/50 transition-all duration-300 flex items-center justify-center w-14 h-14"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed bottom-24 left-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white shadow-lg shadow-emerald-950/20 ring-1 ring-white/15 hover:-translate-y-0.5 hover:bg-emerald-700"
       aria-label="Contact on WhatsApp"
     >
-      <FaWhatsapp className="text-2xl" />
+      <FaWhatsapp className="text-xl" />
     </motion.a>
   );
 }

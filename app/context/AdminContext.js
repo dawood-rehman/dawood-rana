@@ -1,7 +1,6 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
-import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
 
 const AdminContext = createContext();
 
@@ -18,14 +17,25 @@ export function AdminProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const login = (password) => {
-    const credentials = getFromStorage(STORAGE_KEYS.ADMIN_CREDENTIALS, { password: 'Rd535328@' });
-    if (password === credentials.password) {
-      sessionStorage.setItem('admin_auth', 'true');
-      setIsAuthenticated(true);
-      return { success: true };
+  const login = async (password) => {
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      const result = await response.json();
+      if (response.ok && result.success) {
+        sessionStorage.setItem('admin_auth', 'true');
+        setIsAuthenticated(true);
+        return { success: true };
+      }
+
+      return { success: false, message: result.message || 'Invalid password' };
+    } catch (error) {
+      return { success: false, message: 'Unable to reach admin login service' };
     }
-    return { success: false, message: 'Invalid password' };
   };
 
   const logout = () => {
@@ -33,13 +43,24 @@ export function AdminProvider({ children }) {
     setIsAuthenticated(false);
   };
 
-  const updatePassword = (currentPassword, newPassword) => {
-    const credentials = getFromStorage(STORAGE_KEYS.ADMIN_CREDENTIALS, { password: 'Rd535328@' });
-    if (currentPassword === credentials.password) {
-      saveToStorage(STORAGE_KEYS.ADMIN_CREDENTIALS, { password: newPassword });
-      return { success: true, message: 'Password updated successfully' };
+  const updatePassword = async (currentPassword, newPassword) => {
+    try {
+      const response = await fetch('/api/admin/password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+
+      const result = await response.json();
+      if (response.ok && result.success) return result;
+
+      return {
+        success: false,
+        message: result.message || 'Unable to update password',
+      };
+    } catch (error) {
+      return { success: false, message: 'Unable to reach password update service' };
     }
-    return { success: false, message: 'Current password is incorrect' };
   };
 
   return (

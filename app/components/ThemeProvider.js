@@ -5,20 +5,24 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState('light');
   const [mounted, setMounted] = useState(false);
 
   // Apply theme to DOM and localStorage
   const applyTheme = (newTheme) => {
+    const normalizedTheme = newTheme === 'dark' ? 'dark' : 'light';
     const root = document.documentElement;
-    if (newTheme === 'dark') {
+    root.dataset.theme = normalizedTheme;
+    root.style.colorScheme = normalizedTheme;
+
+    if (normalizedTheme === 'dark') {
       root.classList.add('dark');
-      document.body.classList.add('dark');
     } else {
       root.classList.remove('dark');
-      document.body.classList.remove('dark');
     }
-    localStorage.setItem('theme', newTheme);
+
+    localStorage.setItem('theme', normalizedTheme);
+    return normalizedTheme;
   };
 
   // Initialize theme on mount
@@ -26,6 +30,9 @@ export function ThemeProvider({ children }) {
     if (typeof window === 'undefined') return;
     
     let savedTheme = localStorage.getItem('theme');
+    if (savedTheme !== 'dark' && savedTheme !== 'light') {
+      savedTheme = null;
+    }
     
     // If no saved theme, detect from system preference
     if (!savedTheme) {
@@ -33,8 +40,7 @@ export function ThemeProvider({ children }) {
       savedTheme = prefersDark ? 'dark' : 'light';
     }
     
-    applyTheme(savedTheme);
-    setTheme(savedTheme);
+    setTheme(applyTheme(savedTheme));
     setMounted(true);
   }, []);
 
@@ -47,13 +53,12 @@ export function ThemeProvider({ children }) {
     const currentTheme = root.classList.contains('dark') ? 'dark' : 'light';
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     
-    applyTheme(newTheme);
-    setTheme(newTheme);
+    setTheme(applyTheme(newTheme));
   };
 
   if (!mounted) {
     return (
-      <ThemeContext.Provider value={{ theme: 'dark', toggleTheme }}>
+      <ThemeContext.Provider value={{ theme, toggleTheme }}>
         {children}
       </ThemeContext.Provider>
     );

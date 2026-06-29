@@ -16,13 +16,6 @@ export default function AdminWorkExperience() {
     description: '',
   });
 
-  const springTransition = {
-    type: 'spring',
-    stiffness: 300,
-    damping: 25,
-    duration: 0.35,
-  };
-
   useEffect(() => {
     loadExperiences();
   }, []);
@@ -98,7 +91,7 @@ export default function AdminWorkExperience() {
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full min-h-11 px-3 sm:px-4 py-2 sm:py-3 bg-slate-700 border border-slate-600 rounded-lg text-sm sm:text-base text-white placeholder-slate-400 focus:outline-none focus:border-green-500 transition-colors\"
+                  className="w-full min-h-11 px-3 sm:px-4 py-2 sm:py-3 bg-slate-700 border border-slate-600 rounded-lg text-sm sm:text-base text-white placeholder-slate-400 focus:outline-none focus:border-green-500 transition-colors"
                 />
               </div>
               <div>
@@ -107,7 +100,7 @@ export default function AdminWorkExperience() {
                   type="text"
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full min-h-11 px-3 sm:px-4 py-2 sm:py-3 bg-slate-700 border border-slate-600 rounded-lg text-sm sm:text-base text-white placeholder-slate-400 focus:outline-none focus:border-green-500 transition-colors\"
+                  className="w-full min-h-11 px-3 sm:px-4 py-2 sm:py-3 bg-slate-700 border border-slate-600 rounded-lg text-sm sm:text-base text-white placeholder-slate-400 focus:outline-none focus:border-green-500 transition-colors"
                 />
               </div>
             </div>
@@ -180,7 +173,7 @@ export default function AdminWorkExperience() {
                   </button>
                   <button
                     onClick={() => handleDelete(exp.id)}
-                    className="min-h-11 min-w-11 p-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-lg transition-colors duration-150 flex items-center justify-center font-medium\"
+                    className="min-h-11 min-w-11 p-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-lg transition-colors duration-150 flex items-center justify-center font-medium"
                   >
                     <FaTrash />
                   </button>

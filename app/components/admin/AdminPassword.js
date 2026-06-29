@@ -11,14 +11,7 @@ export default function AdminPassword() {
   const [loading, setLoading] = useState(false);
   const { updatePassword } = useAdmin();
 
-  const springTransition = {
-    type: 'spring',
-    stiffness: 300,
-    damping: 25,
-    duration: 0.35,
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
@@ -34,14 +27,14 @@ export default function AdminPassword() {
       return;
     }
 
-    if (newPassword.length < 6) {
-      toast.error('New password must be at least 6 characters');
+    if (newPassword.length < 8) {
+      toast.error('New password must be at least 8 characters');
       setLoading(false);
       return;
     }
 
-    setTimeout(() => {
-      const result = updatePassword(currentPassword, newPassword);
+    try {
+      const result = await updatePassword(currentPassword, newPassword);
       if (result.success) {
         toast.success(result.message);
         setCurrentPassword('');
@@ -50,8 +43,9 @@ export default function AdminPassword() {
       } else {
         toast.error(result.message);
       }
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   return (
@@ -89,7 +83,7 @@ export default function AdminPassword() {
               className="w-full min-h-11 px-3 sm:px-4 py-2 sm:py-3 bg-slate-700 border border-slate-600 rounded-lg text-sm sm:text-base text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 transition-colors"
               disabled={loading}
             />
-            <p className="text-xs sm:text-xs text-slate-400 mt-1.5 sm:mt-2">Minimum 6 characters</p>
+            <p className="text-xs sm:text-xs text-slate-400 mt-1.5 sm:mt-2">Minimum 8 characters</p>
           </div>
 
           <div>
@@ -110,7 +104,7 @@ export default function AdminPassword() {
             className="bg-yellow-900/30 border border-yellow-700/50 rounded-lg p-3 sm:p-4"
           >
             <p className="text-yellow-200 text-xs sm:text-sm">
-              ⚠️ Make sure to remember your new password. There is no password recovery option.
+              Make sure to remember your new password. There is no password recovery option.
             </p>
           </div>
 

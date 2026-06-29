@@ -15,13 +15,6 @@ export default function AdminCertifications() {
     year: '',
   });
 
-  const springTransition = {
-    type: 'spring',
-    stiffness: 300,
-    damping: 25,
-    duration: 0.35,
-  };
-
   useEffect(() => {
     loadCertifications();
   }, []);
@@ -178,7 +171,7 @@ export default function AdminCertifications() {
                   </button>
                 </div>
               </div>
-              {cert.year && <p className="text-xs sm:text-sm text-slate-500 mt-auto\">{cert.year}</p>}
+              {cert.year && <p className="text-xs sm:text-sm text-slate-500 mt-auto">{cert.year}</p>}
             </div>
           ))
         )}
