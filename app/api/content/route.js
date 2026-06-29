@@ -14,7 +14,17 @@ function serializeContent(content) {
 
   const serialized = content.toObject ? content.toObject() : content;
   const { _id, singleton, createdAt, updatedAt, ...data } = serialized;
-  return data;
+  const mergedData = { ...contentDefaults(), ...data };
+  if (mergedData.resume?.data) {
+    mergedData.resume = {
+      url: mergedData.resume.url,
+      name: mergedData.resume.name,
+      contentType: mergedData.resume.contentType,
+      size: mergedData.resume.size,
+      uploadedAt: mergedData.resume.uploadedAt,
+    };
+  }
+  return mergedData;
 }
 
 export async function GET() {

@@ -118,6 +118,9 @@ const resumeSchema = new Schema(
   {
     url: optionalString,
     name: optionalString,
+    contentType: optionalString,
+    data: optionalString,
+    size: { type: Number, default: 0 },
     uploadedAt: { type: Date },
   },
   { _id: false }

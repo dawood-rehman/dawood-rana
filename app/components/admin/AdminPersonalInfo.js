@@ -9,7 +9,6 @@ export default function AdminPersonalInfo() {
     name: '',
     title: '',
     bio: '',
-    image: '',
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -22,9 +21,9 @@ export default function AdminPersonalInfo() {
       name: '',
       title: '',
       bio: '',
-      image: '',
     });
-    setPersonalInfo(data);
+    const { image, ...safeData } = data || {};
+    setPersonalInfo(safeData);
   };
 
   const handleSubmit = (e) => {
@@ -90,16 +89,6 @@ export default function AdminPersonalInfo() {
               />
             </div>
 
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-slate-300 mb-2">Image URL</label>
-              <input
-                type="text"
-                value={personalInfo.image}
-                onChange={(e) => setPersonalInfo({ ...personalInfo, image: e.target.value })}
-                className="w-full min-h-11 px-3 sm:px-4 py-2 sm:py-3 bg-slate-700 border border-slate-600 rounded-lg text-sm sm:text-base text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors"
-              />
-            </div>
-
             <div className="flex flex-col sm:flex-row gap-3 pt-4">
               <button
                 type="submit"
@@ -135,10 +124,6 @@ export default function AdminPersonalInfo() {
           <div>
             <p className="text-xs sm:text-sm text-slate-400 mb-1">Bio</p>
             <p className="text-sm sm:text-base text-slate-300">{personalInfo.bio}</p>
-          </div>
-          <div>
-            <p className="text-xs sm:text-sm text-slate-400 mb-1">Image URL</p>
-            <p className="text-xs sm:text-sm text-slate-400 break-all">{personalInfo.image}</p>
           </div>
         </div>
       )}

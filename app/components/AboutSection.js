@@ -10,7 +10,7 @@ const fallbackPersonalInfo = {
   name: 'Dawood Rehman',
   title: 'Full-Stack Developer & Computer Science Student',
   bio: 'I build clean, responsive web experiences with modern JavaScript, thoughtful UI, and practical backend systems.',
-  image: '/Dawood.jpeg',
+  image: '',
 };
 
 const highlights = [
@@ -51,9 +51,72 @@ export default function AboutSection() {
     };
   }, []);
 
-  const imageSource =
-    profilePicture ||
-    (personalInfo.image && personalInfo.image !== '/profile.jpg' ? personalInfo.image : '/Dawood.jpeg');
+  const initials = personalInfo.name
+    .split(' ')
+    .map((part) => part[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+
+  const ProfilePanel = ({ className = '', compact = false }) => (
+    <div className={`glass-panel elevated-card mx-auto w-full max-w-[560px] p-4 sm:p-5 ${className}`}>
+      <div className="overflow-hidden rounded-lg bg-slate-200 dark:bg-slate-900">
+        {profilePicture ? (
+          <img
+            src={profilePicture}
+            alt={personalInfo.name}
+            className="aspect-[4/4.65] max-h-[610px] w-full object-cover"
+          />
+        ) : (
+          <div className="flex aspect-[4/4.65] max-h-[610px] w-full items-center justify-center bg-gradient-to-br from-sky-400 via-teal-300 to-emerald-400">
+            <span className="text-5xl font-black text-slate-950 sm:text-6xl">{initials || 'DR'}</span>
+          </div>
+        )}
+      </div>
+
+      {!compact && (
+        <>
+          <div className="mt-5 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-bold text-slate-950 dark:text-white">Available for focused web work</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Next.js, React, MongoDB, APIs</p>
+            </div>
+            <div className="flex gap-2">
+              <a
+                href="https://github.com/dawood-rehman"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary focus-ring h-10 w-10 rounded-full"
+                aria-label="GitHub"
+              >
+                <FaGithub />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/dawood-rehman-b25230383"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary focus-ring h-10 w-10 rounded-full"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedin />
+              </a>
+            </div>
+          </div>
+          <div className="mt-5 grid grid-cols-2 gap-3 border-t border-slate-200 pt-5 dark:border-slate-800">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Delivery</p>
+              <p className="mt-1 text-sm font-black text-slate-950 dark:text-white">Clean & responsive</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Stack</p>
+              <p className="mt-1 text-sm font-black text-slate-950 dark:text-white">React + MongoDB</p>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
 
   return (
     <section id="about" className="section-frame hero-section flex items-center">
@@ -73,6 +136,7 @@ export default function AboutSection() {
             <h1 className="premium-text max-w-3xl text-4xl font-black leading-tight sm:text-5xl lg:text-7xl">
               {personalInfo.name}
             </h1>
+            <ProfilePanel compact className="lg:hidden" />
             <p className="text-xl font-semibold text-slate-700 dark:text-slate-200 sm:text-2xl">
               {personalInfo.title}
             </p>
@@ -132,51 +196,9 @@ export default function AboutSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={viewportOnce}
           transition={smoothTransition}
-          className="glass-panel elevated-card mx-auto w-full max-w-[560px] p-4 sm:p-5 lg:mx-0 lg:justify-self-end"
+          className="hidden lg:block lg:justify-self-end"
         >
-          <div className="overflow-hidden rounded-lg bg-slate-200 dark:bg-slate-900">
-            <img
-              src={imageSource}
-              alt={personalInfo.name}
-              className="aspect-[4/4.65] max-h-[610px] w-full object-cover"
-            />
-          </div>
-          <div className="mt-5 flex items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-bold text-slate-950 dark:text-white">Available for focused web work</p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Next.js, React, MongoDB, APIs</p>
-            </div>
-            <div className="flex gap-2">
-              <a
-                href="https://github.com/dawood-rehman"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary focus-ring h-10 w-10 rounded-full"
-                aria-label="GitHub"
-              >
-                <FaGithub />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/dawood-rehman-b25230383"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary focus-ring h-10 w-10 rounded-full"
-                aria-label="LinkedIn"
-              >
-                <FaLinkedin />
-              </a>
-            </div>
-          </div>
-          <div className="mt-5 grid grid-cols-2 gap-3 border-t border-slate-200 pt-5 dark:border-slate-800">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Delivery</p>
-              <p className="mt-1 text-sm font-black text-slate-950 dark:text-white">Clean & responsive</p>
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Stack</p>
-              <p className="mt-1 text-sm font-black text-slate-950 dark:text-white">React + MongoDB</p>
-            </div>
-          </div>
+          <ProfilePanel className="lg:mx-0" />
         </motion.div>
       </div>
     </section>

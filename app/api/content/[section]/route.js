@@ -11,8 +11,12 @@ function contentDefaults() {
 }
 
 function serializeValue(value) {
-  if (value?.toObject) return value.toObject();
-  return value;
+  const serialized = value?.toObject ? value.toObject() : value;
+  if (serialized?.data) {
+    const { data, ...safeValue } = serialized;
+    return safeValue;
+  }
+  return serialized;
 }
 
 export async function GET(_request, context) {
@@ -40,7 +44,7 @@ export async function GET(_request, context) {
     return NextResponse.json({
       success: true,
       source: 'mongodb',
-      value: content?.[section] ?? contentDefaults()[section],
+      value: serializeValue(content?.[section] ?? contentDefaults()[section]),
     });
   } catch (error) {
     console.error(`Content section fetch failed (${section}):`, error);

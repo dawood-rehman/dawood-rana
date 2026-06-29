@@ -32,8 +32,18 @@ export default function AdminResume() {
       const res = await fetch('/api/upload-resume', { method: 'POST', body: fd });
       const data = await res.json();
       if (data.success) {
-        const url = data.url;
-        saveToStorage(STORAGE_KEYS.RESUME, { url, name: file.name, uploadedAt: Date.now() });
+        const url = data.url || '/api/resume';
+        saveToStorage(
+          STORAGE_KEYS.RESUME,
+          {
+            url,
+            name: data.name || file.name,
+            contentType: data.contentType || file.type,
+            size: data.size || file.size,
+            uploadedAt: data.uploadedAt || Date.now(),
+          },
+          { sync: false }
+        );
         setResumeUrl(url);
         toast.success('Resume uploaded successfully');
         setFile(null);
@@ -52,7 +62,7 @@ export default function AdminResume() {
       <h2 className="text-2xl sm:text-3xl font-bold text-white">Manage Resume</h2>
 
       <div className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-lg p-4 sm:p-6 border border-slate-600">
-        <p className="text-sm text-slate-300 mb-3">Upload a PDF or DOCX resume. Once uploaded, it will be available at <span className="text-cyan-400">/resume.pdf</span> for visitors to download.</p>
+        <p className="text-sm text-slate-300 mb-3">Upload a PDF or DOCX resume. In production it is saved through the resume API so visitors can download the latest CV reliably.</p>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <input

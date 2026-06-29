@@ -104,7 +104,7 @@ Security notes:
 
 ## Resume Handling
 
-Resume uploads are stored with a stable public filename such as `public/resume.pdf`. This works for local and traditional server deployments. For serverless deployments, use durable file storage such as object storage if uploaded files must persist across redeploys.
+When MongoDB is configured, resume uploads are stored in the portfolio content record and served through `/api/resume`. This avoids relying on writable deployment storage and works more reliably on serverless platforms. During local development without MongoDB, the app can still fall back to writing a resume file into `public/`.
 
 ## Scripts
 
