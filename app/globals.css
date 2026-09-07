@@ -86,8 +86,20 @@ textarea,
 select,
 a {
   transition:
+    box-shadow 150ms ease,
+    border-color 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.btn-primary,
+.btn-secondary {
+  transition:
     transform 150ms ease,
-    box-shadow 150ms ease;
+    box-shadow 150ms ease,
+    border-color 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease;
 }
 
 ::selection {

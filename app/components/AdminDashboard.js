@@ -79,9 +79,13 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="admin-shell flex min-h-screen items-center justify-center">
-        <div className="rounded-lg border border-slate-700 bg-slate-800 px-5 py-3 text-sm font-semibold text-slate-400">
-          Loading dashboard...
+      <div className="admin-shell flex min-h-screen items-center justify-center p-4">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="loading-mark text-xl">DR</div>
+          <div className="loading-copy">
+            <p>Loading Control Center...</p>
+            <span />
+          </div>
         </div>
       </div>
     );
