@@ -14,27 +14,40 @@ const passionIcons = {
   FaRocket,
 };
 
-export default function PassionSection({ initialPassions = DEFAULT_DATA.passions }) {
+export default function PassionSection({
+  initialPassions = DEFAULT_DATA.passions,
+  initialHeadings = DEFAULT_DATA.sectionHeadings.passion,
+}) {
   const [passions, setPassions] = useState(initialPassions);
+  const [headings, setHeadings] = useState({
+    ...DEFAULT_DATA.sectionHeadings.passion,
+    ...initialHeadings,
+  });
 
   useEffect(() => {
-    const loadPassions = () => {
-      const stored = getFromStorage(STORAGE_KEYS.PASSIONS, null);
-      if (stored) {
-        setPassions(stored);
+    const loadContent = () => {
+      const storedPassions = getFromStorage(STORAGE_KEYS.PASSIONS, null);
+      const storedHeadings = getFromStorage(STORAGE_KEYS.SECTION_HEADINGS, null);
+
+      if (storedPassions) setPassions(storedPassions);
+      if (storedHeadings?.passion) {
+        setHeadings((prev) => ({ ...prev, ...storedHeadings.passion }));
       }
     };
 
-
-    loadPassions();
-    window.addEventListener('passionsUpdated', loadPassions);
-    window.addEventListener('portfolioContentUpdated', loadPassions);
+    loadContent();
+    window.addEventListener('passionsUpdated', loadContent);
+    window.addEventListener('sectionHeadingsUpdated', loadContent);
+    window.addEventListener('portfolioContentUpdated', loadContent);
 
     return () => {
-      window.removeEventListener('passionsUpdated', loadPassions);
-      window.removeEventListener('portfolioContentUpdated', loadPassions);
+      window.removeEventListener('passionsUpdated', loadContent);
+      window.removeEventListener('sectionHeadingsUpdated', loadContent);
+      window.removeEventListener('portfolioContentUpdated', loadContent);
     };
   }, []);
+
+  const visiblePassions = passions.filter((p) => p.enabled !== false);
 
   return (
     <section id="passion" className="section-frame">
@@ -47,13 +60,14 @@ export default function PassionSection({ initialPassions = DEFAULT_DATA.passions
           className="mx-auto max-w-3xl text-center"
         >
           <motion.div variants={fadeUp} transition={smoothTransition} className="mx-auto mb-5 eyebrow">
-            Focus
+            {headings.eyebrow || 'Focus'}
           </motion.div>
           <motion.h2 variants={fadeUp} transition={smoothTransition} className="section-title">
-            Building Useful Digital Products
+            {headings.title || 'Building Useful Digital Products'}
           </motion.h2>
           <motion.p variants={fadeUp} transition={smoothTransition} className="section-copy mt-5">
-            My work sits at the intersection of clean UI, reliable data, and practical problem solving.
+            {headings.subtitle ||
+              'My work sits at the intersection of clean UI, reliable data, and practical problem solving.'}
           </motion.p>
         </motion.div>
 
@@ -64,7 +78,7 @@ export default function PassionSection({ initialPassions = DEFAULT_DATA.passions
           variants={staggerContainer}
           className="mt-10 grid gap-5 md:grid-cols-2"
         >
-          {passions.map((passion, index) => {
+          {visiblePassions.map((passion, index) => {
             const Icon = passionIcons[passion.icon] || FaCode;
             const accentGradient = getStableGradient(passion.title, index);
 

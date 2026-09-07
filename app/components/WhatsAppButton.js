@@ -9,33 +9,61 @@ function extractDigits(str = '') {
   return String(str).replace(/\D/g, '');
 }
 
-export default function WhatsAppButton({ initialPhone = '' }) {
+export default function WhatsAppButton({ initialPhone = '', initialName = '' }) {
   const [phone, setPhone] = useState(
     extractDigits(initialPhone) || '923144885177'
   );
+  const [name, setName] = useState(initialName || 'Dawood');
 
   useEffect(() => {
-    const updatePhone = () => {
+    const updatePhoneAndName = () => {
       const contacts = getFromStorage(STORAGE_KEYS.CONTACT_INFO, DEFAULT_DATA.contactInfo);
-      const phoneItem = contacts.find(
-        (c) => c.label?.toLowerCase() === 'phone' || c.label?.toLowerCase() === 'whatsapp'
+      const socials = getFromStorage(STORAGE_KEYS.SOCIAL_LINKS, DEFAULT_DATA.socialLinks);
+      const personal = getFromStorage(STORAGE_KEYS.PERSONAL_INFO, DEFAULT_DATA.personalInfo);
+
+      if (personal?.name) {
+        setName(personal.name.split(' ')[0] || personal.name);
+      }
+
+      // Check contactInfo first
+      const phoneItem = contacts?.find(
+        (c) =>
+          c.label?.toLowerCase().includes('phone') ||
+          c.label?.toLowerCase().includes('whatsapp') ||
+          c.label?.toLowerCase().includes('mobile')
       );
+
+      // Check socialLinks for WhatsApp URL
+      const waSocial = socials?.find(
+        (s) => s.name?.toLowerCase().includes('whatsapp')
+      );
+
       if (phoneItem?.value) {
         const digits = extractDigits(phoneItem.value);
+        if (digits) setPhone(digits);
+      } else if (waSocial?.url) {
+        const digits = extractDigits(waSocial.url);
         if (digits) setPhone(digits);
       }
     };
 
-    updatePhone();
-    window.addEventListener('contactUpdated', updatePhone);
-    window.addEventListener('portfolioContentUpdated', updatePhone);
+    updatePhoneAndName();
+    window.addEventListener('contactUpdated', updatePhoneAndName);
+    window.addEventListener('socialsUpdated', updatePhoneAndName);
+    window.addEventListener('personalInfoUpdated', updatePhoneAndName);
+    window.addEventListener('portfolioContentUpdated', updatePhoneAndName);
+
     return () => {
-      window.removeEventListener('contactUpdated', updatePhone);
-      window.removeEventListener('portfolioContentUpdated', updatePhone);
+      window.removeEventListener('contactUpdated', updatePhoneAndName);
+      window.removeEventListener('socialsUpdated', updatePhoneAndName);
+      window.removeEventListener('personalInfoUpdated', updatePhoneAndName);
+      window.removeEventListener('portfolioContentUpdated', updatePhoneAndName);
     };
   }, []);
 
-  const message = encodeURIComponent('Hello Dawood! I would like to connect with you regarding your portfolio.');
+  const message = encodeURIComponent(`Hello ${name}! I would like to connect with you regarding your portfolio.`);
+
+  if (!phone) return null;
 
   return (
     <motion.a
@@ -53,5 +81,3 @@ export default function WhatsAppButton({ initialPhone = '' }) {
     </motion.a>
   );
 }
-
-

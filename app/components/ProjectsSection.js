@@ -12,29 +12,42 @@ const icons = {
   FaServer,
 };
 
-export default function ProjectsSection({ initialProjects = DEFAULT_DATA.projects }) {
+export default function ProjectsSection({
+  initialProjects = DEFAULT_DATA.projects,
+  initialHeadings = DEFAULT_DATA.sectionHeadings.projects,
+}) {
   const [projects, setProjects] = useState(initialProjects);
+  const [headings, setHeadings] = useState({
+    ...DEFAULT_DATA.sectionHeadings.projects,
+    ...initialHeadings,
+  });
 
   useEffect(() => {
-    const loadProjects = () => {
-      const stored = getFromStorage(STORAGE_KEYS.PROJECTS, null);
-      if (stored) {
-        setProjects(stored);
+    const loadContent = () => {
+      const storedProjects = getFromStorage(STORAGE_KEYS.PROJECTS, null);
+      const storedHeadings = getFromStorage(STORAGE_KEYS.SECTION_HEADINGS, null);
+
+      if (storedProjects) setProjects(storedProjects);
+      if (storedHeadings?.projects) {
+        setHeadings((prev) => ({ ...prev, ...storedHeadings.projects }));
       }
     };
 
-
-    loadProjects();
-    window.addEventListener('storage', loadProjects);
-    window.addEventListener('projectsUpdated', loadProjects);
-    window.addEventListener('portfolioContentUpdated', loadProjects);
+    loadContent();
+    window.addEventListener('storage', loadContent);
+    window.addEventListener('projectsUpdated', loadContent);
+    window.addEventListener('sectionHeadingsUpdated', loadContent);
+    window.addEventListener('portfolioContentUpdated', loadContent);
 
     return () => {
-      window.removeEventListener('storage', loadProjects);
-      window.removeEventListener('projectsUpdated', loadProjects);
-      window.removeEventListener('portfolioContentUpdated', loadProjects);
+      window.removeEventListener('storage', loadContent);
+      window.removeEventListener('projectsUpdated', loadContent);
+      window.removeEventListener('sectionHeadingsUpdated', loadContent);
+      window.removeEventListener('portfolioContentUpdated', loadContent);
     };
   }, []);
+
+  const visibleProjects = projects.filter((p) => p.enabled !== false);
 
   return (
     <section id="projects" className="section-frame">
@@ -48,14 +61,15 @@ export default function ProjectsSection({ initialProjects = DEFAULT_DATA.project
         >
           <div className="max-w-3xl">
             <motion.div variants={fadeUp} transition={smoothTransition} className="mb-5 eyebrow">
-              Selected Work
+              {headings.eyebrow || 'Selected Work'}
             </motion.div>
             <motion.h2 variants={fadeUp} transition={smoothTransition} className="section-title">
-              Projects With Real Product Shape
+              {headings.title || 'Projects With Real Product Shape'}
             </motion.h2>
           </div>
           <motion.p variants={fadeUp} transition={smoothTransition} className="section-copy max-w-md md:text-right">
-            A focused set of apps showing frontend craft, API integration, and database-backed workflows.
+            {headings.subtitle ||
+              'A focused set of apps showing frontend craft, API integration, and database-backed workflows.'}
           </motion.p>
         </motion.div>
 
@@ -66,12 +80,12 @@ export default function ProjectsSection({ initialProjects = DEFAULT_DATA.project
           variants={staggerContainer}
           className="mt-10 grid gap-5 md:grid-cols-2"
         >
-          {projects.length === 0 ? (
+          {visibleProjects.length === 0 ? (
             <div className="quiet-card p-8 text-center text-slate-500 dark:text-slate-400 md:col-span-2">
               No projects available yet.
             </div>
           ) : (
-            projects.map((project, index) => {
+            visibleProjects.map((project, index) => {
               const Icon = icons[project.icon] || FaCode;
               const accentGradient = getStableGradient(project.title, index);
 

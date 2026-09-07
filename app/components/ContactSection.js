@@ -30,32 +30,46 @@ const icons = {
 export default function ContactSection({
   initialContactInfo = DEFAULT_DATA.contactInfo,
   initialSocialLinks = DEFAULT_DATA.socialLinks,
+  initialHeadings = DEFAULT_DATA.sectionHeadings.contact,
 }) {
   const [socialLinks, setSocialLinks] = useState(initialSocialLinks);
   const [contactInfo, setContactInfo] = useState(initialContactInfo);
+  const [headings, setHeadings] = useState({
+    ...DEFAULT_DATA.sectionHeadings.contact,
+    ...initialHeadings,
+  });
 
   useEffect(() => {
     const loadData = () => {
       const storedSocials = getFromStorage(STORAGE_KEYS.SOCIAL_LINKS, null);
       const storedContacts = getFromStorage(STORAGE_KEYS.CONTACT_INFO, null);
+      const storedHeadings = getFromStorage(STORAGE_KEYS.SECTION_HEADINGS, null);
+
       if (storedSocials) setSocialLinks(storedSocials);
       if (storedContacts) setContactInfo(storedContacts);
+      if (storedHeadings?.contact) {
+        setHeadings((prev) => ({ ...prev, ...storedHeadings.contact }));
+      }
     };
-
 
     loadData();
     window.addEventListener('storage', loadData);
     window.addEventListener('contactUpdated', loadData);
     window.addEventListener('socialsUpdated', loadData);
+    window.addEventListener('sectionHeadingsUpdated', loadData);
     window.addEventListener('portfolioContentUpdated', loadData);
 
     return () => {
       window.removeEventListener('storage', loadData);
       window.removeEventListener('contactUpdated', loadData);
       window.removeEventListener('socialsUpdated', loadData);
+      window.removeEventListener('sectionHeadingsUpdated', loadData);
       window.removeEventListener('portfolioContentUpdated', loadData);
     };
   }, []);
+
+  const visibleContact = contactInfo.filter((c) => c.enabled !== false);
+  const visibleSocials = socialLinks.filter((s) => s.enabled !== false);
 
   return (
     <section id="contact" className="section-frame">
@@ -68,13 +82,14 @@ export default function ContactSection({
           className="mx-auto max-w-3xl text-center"
         >
           <motion.div variants={fadeUp} transition={smoothTransition} className="mx-auto mb-5 eyebrow">
-            Contact
+            {headings.eyebrow || 'Contact'}
           </motion.div>
           <motion.h2 variants={fadeUp} transition={smoothTransition} className="section-title">
-            Let&apos;s Build Something Clean
+            {headings.title || "Let's Build Something Clean"}
           </motion.h2>
           <motion.p variants={fadeUp} transition={smoothTransition} className="section-copy mt-5">
-            Reach out for portfolio work, web applications, dashboards, or collaboration.
+            {headings.subtitle ||
+              'Reach out for portfolio work, web applications, dashboards, or collaboration.'}
           </motion.p>
         </motion.div>
 
@@ -86,7 +101,7 @@ export default function ContactSection({
             variants={staggerContainer}
             className="grid gap-4"
           >
-            {contactInfo.map((info) => {
+            {visibleContact.map((info) => {
               const Icon = icons[info.icon] || FaEnvelope;
 
               return (
@@ -122,15 +137,17 @@ export default function ContactSection({
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h3 className="text-2xl font-black text-slate-950 dark:text-white">Social Profiles</h3>
+                <h3 className="text-2xl font-black text-slate-950 dark:text-white">
+                  {headings.socialTitle || 'Social Profiles'}
+                </h3>
                 <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                  Professional links and direct channels.
+                  {headings.socialSubtitle || 'Professional links and direct channels.'}
                 </p>
               </div>
             </div>
 
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {socialLinks.map((social, index) => {
+              {visibleSocials.map((social, index) => {
                 const Icon = icons[social.icon] || FaGithub;
                 const accentGradient = getStableGradient(social.name, index);
 
@@ -145,7 +162,9 @@ export default function ContactSection({
                     className="focus-ring rounded-lg border border-slate-200 bg-white/70 p-4 hover:-translate-y-1 hover:border-slate-300 hover:bg-white dark:border-slate-800 dark:bg-slate-900/70 dark:hover:border-slate-700 dark:hover:bg-slate-900"
                   >
                     <div className="flex items-center gap-3">
-                      <span className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${accentGradient} text-white shadow-sm`}>
+                      <span
+                        className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${accentGradient} text-white shadow-sm`}
+                      >
                         <Icon />
                       </span>
                       <span className="min-w-0">
