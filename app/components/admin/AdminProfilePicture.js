@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { FaUndo, FaRedo, FaSun, FaImage, FaCheck, FaTimes } from 'react-icons/fa';
 import toast from 'react-hot-toast';
-import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
+import { getFromStorage, saveContentSection, STORAGE_KEYS } from '@/lib/storage';
 
 export default function AdminProfilePicture() {
   const [profileImage, setProfileImage] = useState('');
@@ -34,7 +34,7 @@ export default function AdminProfilePicture() {
   }, []);
 
   // Drag handlers
-  const handleMouseDown = (e) => {
+  const handleMouseDown = () => {
     if (!previewContainerRef.current || !imageRef.current) return;
     setIsDragging(true);
   };
@@ -44,12 +44,10 @@ export default function AdminProfilePicture() {
 
     const container = previewContainerRef.current;
     const rect = container.getBoundingClientRect();
-    
-    // Calculate movement
-    const moveX = e.clientX - rect.left - (rect.width / 2);
-    const moveY = e.clientY - rect.top - (rect.height / 2);
-    
-    // Limit movement to keep image visible on all sides
+
+    const moveX = e.clientX - rect.left - rect.width / 2;
+    const moveY = e.clientY - rect.top - rect.height / 2;
+
     const maxOffset = 50;
     const newOffsetX = Math.max(-maxOffset, Math.min(maxOffset, moveX / 2));
     const newOffsetY = Math.max(-maxOffset, Math.min(maxOffset, moveY / 2));
@@ -65,7 +63,6 @@ export default function AdminProfilePicture() {
     setIsDragging(false);
   };
 
-  // Add event listeners
   useEffect(() => {
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
@@ -81,6 +78,11 @@ export default function AdminProfilePicture() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (event) => {
       const imageData = event.target?.result;
@@ -91,8 +93,8 @@ export default function AdminProfilePicture() {
     reader.readAsDataURL(file);
   };
 
-  // Apply filters and save
-  const applyAndSave = () => {
+  // Apply filters, resize, and save via authenticated API
+  const applyAndSave = async () => {
     if (!previewImage) return;
 
     setLoading(true);
@@ -104,8 +106,14 @@ export default function AdminProfilePicture() {
       return;
     }
 
-    canvas.width = img.naturalWidth || img.width;
-    canvas.height = img.naturalHeight || img.height;
+    // Clamp dimensions to maximum 512x512 to prevent QuotaExceededError and database bloat
+    const maxDimension = 512;
+    const naturalWidth = img.naturalWidth || img.width || 400;
+    const naturalHeight = img.naturalHeight || img.height || 400;
+    const scaleFactor = Math.min(maxDimension / naturalWidth, maxDimension / naturalHeight, 1);
+
+    canvas.width = Math.round(naturalWidth * scaleFactor);
+    canvas.height = Math.round(naturalHeight * scaleFactor);
 
     const ctx = canvas.getContext('2d');
     if (!ctx) {
@@ -113,7 +121,6 @@ export default function AdminProfilePicture() {
       return;
     }
 
-    // Apply filters first
     const filters = [];
     if (editSettings.brightness !== 100) {
       filters.push(`brightness(${editSettings.brightness}%)`);
@@ -129,31 +136,34 @@ export default function AdminProfilePicture() {
       ctx.filter = filters.join(' ');
     }
 
-    // Calculate center and apply transformations
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
-    
+
     ctx.translate(centerX, centerY);
-    
-    // Apply rotation
+
     if (editSettings.rotation !== 0) {
       ctx.rotate((editSettings.rotation * Math.PI) / 180);
     }
-    
-    // Apply offset (scale to image size)
-    const scale = canvas.width / 160; // 160px is approximate screen size, scale to canvas
-    ctx.translate(editSettings.offsetX * scale, editSettings.offsetY * scale);
-    
-    ctx.translate(-centerX, -centerY);
-    ctx.drawImage(img, 0, 0);
 
-    // Convert canvas to data URL and save
-    const editedImage = canvas.toDataURL('image/jpeg', 0.95);
-    saveToStorage(STORAGE_KEYS.PROFILE_PICTURE, editedImage);
-    setProfileImage(editedImage);
-    setIsEditing(false);
-    setLoading(false);
-    toast.success('Profile picture updated!');
+    const previewScale = canvas.width / 160;
+    ctx.translate(editSettings.offsetX * previewScale, editSettings.offsetY * previewScale);
+
+    ctx.translate(-centerX, -centerY);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    // Export optimized JPEG at 0.85 quality
+    const editedImage = canvas.toDataURL('image/jpeg', 0.85);
+
+    try {
+      await saveContentSection('profilePicture', editedImage);
+      setProfileImage(editedImage);
+      setIsEditing(false);
+      toast.success('Profile picture updated successfully');
+    } catch (error) {
+      toast.error(error.message || 'Failed to save profile picture');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const cancelEdit = () => {
@@ -167,30 +177,29 @@ export default function AdminProfilePicture() {
   };
 
   return (
-    <div className="bg-white/10 dark:bg-slate-800/50 backdrop-blur-xl rounded-lg sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl hover:shadow-3xl transition-all duration-300 border border-white/20 dark:border-slate-700/50">
-      <h3 className="text-xl sm:text-2xl font-bold mb-6 text-white dark:text-slate-100 flex items-center gap-2">
+    <div className="rounded-lg border border-slate-700 bg-slate-800 p-4 sm:p-6 transition-all duration-200">
+      <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-white">
         <FaImage className="text-purple-400" /> Profile Picture
       </h3>
 
       {!isEditing ? (
         <div className="space-y-4">
-          {/* Current Profile Picture Preview */}
           {profileImage && (
             <div className="flex justify-center mb-4">
-              <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-purple-500/50 shadow-lg">
+              <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-purple-500/50 shadow-lg">
                 <img
                   src={profileImage}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
+                  alt="Profile Preview"
+                  className="h-full w-full object-cover"
                 />
               </div>
             </div>
           )}
 
-          {/* Upload Button */}
           <button
+            type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="w-full px-4 py-2 sm:py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm sm:text-base font-semibold rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-150"
+            className="w-full min-h-11 rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:from-purple-700 hover:to-blue-700"
           >
             Choose Picture
           </button>
@@ -200,25 +209,23 @@ export default function AdminProfilePicture() {
             accept="image/*"
             onChange={handleFileUpload}
             className="hidden"
+            aria-label="Upload profile picture"
           />
         </div>
       ) : (
         <div className="space-y-4">
-          {/* Image Preview with Filters */}
-          <div className="bg-slate-900/50 rounded-lg p-4 flex justify-center">
+          <div className="flex justify-center rounded-lg bg-slate-900/60 p-4">
             <div
               ref={previewContainerRef}
-              className="relative w-40 h-40 rounded-full border-4 border-purple-500/30 cursor-move select-none flex items-center justify-center overflow-hidden"
+              className="relative flex h-40 w-40 items-center justify-center overflow-hidden rounded-full border-4 border-purple-500/30 select-none"
               onMouseDown={handleMouseDown}
-              style={{
-                cursor: isDragging ? 'grabbing' : 'grab',
-              }}
+              style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
             >
               <img
                 ref={imageRef}
                 src={previewImage}
-                alt="Preview"
-                className="absolute w-48 h-48 object-cover"
+                alt="Crop and filter preview"
+                className="absolute h-48 w-48 object-cover"
                 style={{
                   transform: `translate(calc(-50% + ${editSettings.offsetX}px), calc(-50% + ${editSettings.offsetY}px)) rotate(${editSettings.rotation}deg)`,
                   filter: `brightness(${editSettings.brightness}%) contrast(${editSettings.contrast}%) saturate(${editSettings.saturation}%)`,
@@ -230,47 +237,47 @@ export default function AdminProfilePicture() {
             </div>
           </div>
 
-          {/* Canvas for processing (hidden) */}
           <canvas ref={canvasRef} className="hidden" />
 
-          {/* Rotation Controls */}
           <div>
-            <label className="block text-sm font-semibold text-slate-200 dark:text-slate-300 mb-2">
+            <label className="mb-2 block text-sm font-semibold text-slate-300">
               Rotation: {editSettings.rotation}°
             </label>
             <div className="flex gap-2">
               <button
+                type="button"
                 onClick={() =>
                   setEditSettings((prev) => ({
                     ...prev,
                     rotation: (prev.rotation - 90 + 360) % 360,
                   }))
                 }
-                className="flex-1 px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium text-sm flex items-center justify-center gap-1"
+                className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-slate-700 px-3 py-2 text-sm font-medium text-white hover:bg-slate-600"
               >
                 <FaUndo /> Left
               </button>
               <button
+                type="button"
                 onClick={() =>
                   setEditSettings((prev) => ({
                     ...prev,
                     rotation: (prev.rotation + 90) % 360,
                   }))
                 }
-                className="flex-1 px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium text-sm flex items-center justify-center gap-1"
+                className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-slate-700 px-3 py-2 text-sm font-medium text-white hover:bg-slate-600"
               >
                 Right <FaRedo />
               </button>
             </div>
           </div>
 
-          {/* Brightness Slider */}
           <div>
-            <label className="block text-sm font-semibold text-slate-200 dark:text-slate-300 mb-2">
-              <FaSun className="inline mr-2" />
+            <label htmlFor="filter-brightness" className="mb-2 block text-sm font-semibold text-slate-300">
+              <FaSun className="mr-2 inline" />
               Brightness: {editSettings.brightness}%
             </label>
             <input
+              id="filter-brightness"
               type="range"
               min="0"
               max="200"
@@ -278,19 +285,19 @@ export default function AdminProfilePicture() {
               onChange={(e) =>
                 setEditSettings((prev) => ({
                   ...prev,
-                  brightness: parseInt(e.target.value),
+                  brightness: parseInt(e.target.value, 10),
                 }))
               }
               className="w-full accent-purple-500"
             />
           </div>
 
-          {/* Contrast Slider */}
           <div>
-            <label className="block text-sm font-semibold text-slate-200 dark:text-slate-300 mb-2">
+            <label htmlFor="filter-contrast" className="mb-2 block text-sm font-semibold text-slate-300">
               Contrast: {editSettings.contrast}%
             </label>
             <input
+              id="filter-contrast"
               type="range"
               min="0"
               max="200"
@@ -298,19 +305,19 @@ export default function AdminProfilePicture() {
               onChange={(e) =>
                 setEditSettings((prev) => ({
                   ...prev,
-                  contrast: parseInt(e.target.value),
+                  contrast: parseInt(e.target.value, 10),
                 }))
               }
               className="w-full accent-purple-500"
             />
           </div>
 
-          {/* Saturation Slider */}
           <div>
-            <label className="block text-sm font-semibold text-slate-200 dark:text-slate-300 mb-2">
+            <label htmlFor="filter-saturation" className="mb-2 block text-sm font-semibold text-slate-300">
               Saturation: {editSettings.saturation}%
             </label>
             <input
+              id="filter-saturation"
               type="range"
               min="0"
               max="200"
@@ -318,19 +325,19 @@ export default function AdminProfilePicture() {
               onChange={(e) =>
                 setEditSettings((prev) => ({
                   ...prev,
-                  saturation: parseInt(e.target.value),
+                  saturation: parseInt(e.target.value, 10),
                 }))
               }
               className="w-full accent-purple-500"
             />
           </div>
 
-          {/* Vertical Position (Y Offset) */}
           <div>
-            <label className="block text-sm font-semibold text-slate-200 dark:text-slate-300 mb-2">
-              Vertical Position: {editSettings.offsetY}px (↑ ↓)
+            <label htmlFor="filter-offset-y" className="mb-2 block text-sm font-semibold text-slate-300">
+              Vertical Position: {editSettings.offsetY}px
             </label>
             <input
+              id="filter-offset-y"
               type="range"
               min="-50"
               max="50"
@@ -338,19 +345,19 @@ export default function AdminProfilePicture() {
               onChange={(e) =>
                 setEditSettings((prev) => ({
                   ...prev,
-                  offsetY: parseInt(e.target.value),
+                  offsetY: parseInt(e.target.value, 10),
                 }))
               }
               className="w-full accent-blue-500"
             />
           </div>
 
-          {/* Horizontal Position (X Offset) */}
           <div>
-            <label className="block text-sm font-semibold text-slate-200 dark:text-slate-300 mb-2">
-              Horizontal Position: {editSettings.offsetX}px (← →)
+            <label htmlFor="filter-offset-x" className="mb-2 block text-sm font-semibold text-slate-300">
+              Horizontal Position: {editSettings.offsetX}px
             </label>
             <input
+              id="filter-offset-x"
               type="range"
               min="-50"
               max="50"
@@ -358,32 +365,34 @@ export default function AdminProfilePicture() {
               onChange={(e) =>
                 setEditSettings((prev) => ({
                   ...prev,
-                  offsetX: parseInt(e.target.value),
+                  offsetX: parseInt(e.target.value, 10),
                 }))
               }
               className="w-full accent-cyan-500"
             />
           </div>
 
-          {/* Control Buttons */}
           <div className="flex gap-2 pt-2">
             <button
+              type="button"
               onClick={resetSettings}
-              className="flex-1 px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium text-sm"
+              className="flex-1 rounded-lg bg-slate-700 px-3 py-2 text-sm font-medium text-white hover:bg-slate-600"
             >
               Reset
             </button>
             <button
+              type="button"
               onClick={cancelEdit}
               disabled={loading}
-              className="flex-1 px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium text-sm flex items-center justify-center gap-1 disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-slate-700 px-3 py-2 text-sm font-medium text-white hover:bg-slate-600 disabled:opacity-50"
             >
               <FaTimes /> Cancel
             </button>
             <button
+              type="button"
               onClick={applyAndSave}
               disabled={loading}
-              className="flex-1 px-3 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-medium text-sm flex items-center justify-center gap-1 disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-3 py-2 text-sm font-medium text-white hover:from-green-700 hover:to-emerald-700 disabled:opacity-50"
             >
               <FaCheck /> {loading ? 'Saving...' : 'Save'}
             </button>
@@ -393,3 +402,4 @@ export default function AdminProfilePicture() {
     </div>
   );
 }
+

@@ -21,7 +21,8 @@
   --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.06), 0 18px 50px rgba(16, 24, 40, 0.08);
 }
 
-html.dark {
+html.dark,
+html[data-theme="dark"] {
   color-scheme: dark;
   --background: #070b13;
   --foreground: #f8fafc;
@@ -63,10 +64,10 @@ body {
     var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  transition: background-color 180ms ease, color 180ms ease;
 }
 
-html.dark body {
+html.dark body,
+html[data-theme="dark"] body {
   background:
     radial-gradient(circle at 18% 4%, var(--halo-one), transparent 32rem),
     radial-gradient(circle at 90% 10%, var(--halo-two), transparent 30rem),
@@ -85,12 +86,8 @@ textarea,
 select,
 a {
   transition:
-    background-color 180ms ease,
-    border-color 180ms ease,
-    color 180ms ease,
-    opacity 180ms ease,
-    transform 180ms ease,
-    box-shadow 180ms ease;
+    transform 150ms ease,
+    box-shadow 150ms ease;
 }
 
 ::selection {

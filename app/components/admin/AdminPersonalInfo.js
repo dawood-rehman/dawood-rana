@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
+import { getFromStorage, saveContentSection, STORAGE_KEYS } from '@/lib/storage';
 import toast from 'react-hot-toast';
 
 export default function AdminPersonalInfo() {
@@ -11,6 +11,7 @@ export default function AdminPersonalInfo() {
     bio: '',
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadPersonalInfo();
@@ -26,18 +27,26 @@ export default function AdminPersonalInfo() {
     setPersonalInfo(safeData);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!personalInfo.name || !personalInfo.title) {
+    if (!personalInfo.name.trim() || !personalInfo.title.trim()) {
       toast.error('Please fill in all required fields');
       return;
     }
 
-    saveToStorage(STORAGE_KEYS.PERSONAL_INFO, personalInfo);
-    toast.success('Personal info updated successfully');
-    setIsEditing(false);
+    setLoading(true);
+    try {
+      await saveContentSection('personalInfo', personalInfo);
+      toast.success('Personal info updated successfully');
+      setIsEditing(false);
+    } catch (error) {
+      toast.error(error.message || 'Failed to update personal info');
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   return (
     <div className="w-full space-y-6">

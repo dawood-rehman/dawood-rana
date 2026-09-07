@@ -12,13 +12,17 @@ const icons = {
   FaServer,
 };
 
-export default function ProjectsSection() {
-  const [projects, setProjects] = useState(DEFAULT_DATA.projects);
+export default function ProjectsSection({ initialProjects = DEFAULT_DATA.projects }) {
+  const [projects, setProjects] = useState(initialProjects);
 
   useEffect(() => {
     const loadProjects = () => {
-      setProjects(getFromStorage(STORAGE_KEYS.PROJECTS, DEFAULT_DATA.projects));
+      const stored = getFromStorage(STORAGE_KEYS.PROJECTS, null);
+      if (stored) {
+        setProjects(stored);
+      }
     };
+
 
     loadProjects();
     window.addEventListener('storage', loadProjects);

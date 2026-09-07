@@ -3,6 +3,7 @@ import PortfolioContent from '@/models/PortfolioContent';
 import { connectToDatabase, isMongoConfigured } from '@/lib/mongodb';
 import { isContentSection } from '@/lib/contentSections';
 import { DEFAULT_DATA } from '@/lib/storage';
+import { verifyAdminSession } from '@/lib/adminAuth';
 
 export const runtime = 'nodejs';
 
@@ -56,6 +57,14 @@ export async function GET(_request, context) {
 }
 
 export async function PUT(request, context) {
+  const session = verifyAdminSession(request);
+  if (!session) {
+    return NextResponse.json(
+      { success: false, message: 'Unauthorized. Admin session required.' },
+      { status: 401 }
+    );
+  }
+
   const { section } = await context.params;
 
   if (!isContentSection(section)) {
@@ -73,8 +82,15 @@ export async function PUT(request, context) {
   }
 
   try {
-    const body = await request.json();
-    const value = body?.value;
+    const body = await request.json().catch(() => null);
+    if (!body || !Object.prototype.hasOwnProperty.call(body, 'value')) {
+      return NextResponse.json(
+        { success: false, message: 'Missing "value" in request body' },
+        { status: 400 }
+      );
+    }
+
+    const value = body.value;
     const insertDefaults = contentDefaults();
     delete insertDefaults[section];
 
@@ -100,3 +116,4 @@ export async function PUT(request, context) {
     );
   }
 }
+

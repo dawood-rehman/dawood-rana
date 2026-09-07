@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
-import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
+import { getFromStorage, saveContentSection, STORAGE_KEYS } from '@/lib/storage';
 import toast from 'react-hot-toast';
 
 const iconOptions = ['FaSchool', 'FaGraduationCap', 'FaUniversity'];
@@ -18,6 +18,7 @@ export default function AdminEducation() {
   const [education, setEducation] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     institution: '',
@@ -47,33 +48,38 @@ export default function AdminEducation() {
     setEditingId(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.institution) {
+    if (!formData.title.trim() || !formData.institution.trim()) {
       toast.error('Please fill in all required fields');
       return;
     }
 
-    if (editingId) {
-      const updatedEducation = education.map((e) =>
-        e.id === editingId ? { ...e, ...formData } : e
-      );
-      setEducation(updatedEducation);
-      saveToStorage(STORAGE_KEYS.EDUCATION, updatedEducation);
-      toast.success('Education updated successfully');
-    } else {
-      const newEducation = {
-        id: Date.now().toString(),
-        ...formData,
-      };
-      const updatedEducation = [...education, newEducation];
-      setEducation(updatedEducation);
-      saveToStorage(STORAGE_KEYS.EDUCATION, updatedEducation);
-      toast.success('Education added successfully');
-    }
+    setLoading(true);
+    try {
+      let updatedEducation;
+      if (editingId) {
+        updatedEducation = education.map((item) =>
+          item.id === editingId ? { ...item, ...formData } : item
+        );
+      } else {
+        const newEducation = {
+          id: Date.now().toString(),
+          ...formData,
+        };
+        updatedEducation = [...education, newEducation];
+      }
 
-    resetForm();
+      await saveContentSection('education', updatedEducation);
+      setEducation(updatedEducation);
+      toast.success(editingId ? 'Education updated successfully' : 'Education added successfully');
+      resetForm();
+    } catch (error) {
+      toast.error(error.message || 'Failed to save education entry');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEdit = (item) => {
@@ -88,14 +94,19 @@ export default function AdminEducation() {
     setIsAdding(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm('Are you sure you want to delete this education entry?')) {
       const updatedEducation = education.filter((e) => e.id !== id);
-      setEducation(updatedEducation);
-      saveToStorage(STORAGE_KEYS.EDUCATION, updatedEducation);
-      toast.success('Education deleted successfully');
+      try {
+        await saveContentSection('education', updatedEducation);
+        setEducation(updatedEducation);
+        toast.success('Education deleted successfully');
+      } catch (error) {
+        toast.error(error.message || 'Failed to delete education entry');
+      }
     }
   };
+
 
   return (
     <div className="space-y-6">

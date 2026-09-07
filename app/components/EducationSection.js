@@ -13,13 +13,17 @@ const icons = {
   FaUniversity,
 };
 
-export default function EducationSection() {
-  const [education, setEducation] = useState(DEFAULT_DATA.education);
+export default function EducationSection({ initialEducation = DEFAULT_DATA.education }) {
+  const [education, setEducation] = useState(initialEducation);
 
   useEffect(() => {
     const loadEducation = () => {
-      setEducation(getFromStorage(STORAGE_KEYS.EDUCATION, DEFAULT_DATA.education));
+      const stored = getFromStorage(STORAGE_KEYS.EDUCATION, null);
+      if (stored) {
+        setEducation(stored);
+      }
     };
+
 
     loadEducation();
     window.addEventListener('storage', loadEducation);

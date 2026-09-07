@@ -14,13 +14,17 @@ const passionIcons = {
   FaRocket,
 };
 
-export default function PassionSection() {
-  const [passions, setPassions] = useState(DEFAULT_DATA.passions);
+export default function PassionSection({ initialPassions = DEFAULT_DATA.passions }) {
+  const [passions, setPassions] = useState(initialPassions);
 
   useEffect(() => {
     const loadPassions = () => {
-      setPassions(getFromStorage(STORAGE_KEYS.PASSIONS, DEFAULT_DATA.passions));
+      const stored = getFromStorage(STORAGE_KEYS.PASSIONS, null);
+      if (stored) {
+        setPassions(stored);
+      }
     };
+
 
     loadPassions();
     window.addEventListener('passionsUpdated', loadPassions);

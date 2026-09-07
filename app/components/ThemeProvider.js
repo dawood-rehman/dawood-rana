@@ -1,71 +1,49 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useCallback, useSyncExternalStore } from 'react';
 
-const ThemeContext = createContext();
+const ThemeContext = createContext({
+  theme: 'light',
+  toggleTheme: () => {},
+});
+
+function getThemeSnapshot() {
+  if (typeof window === 'undefined') return 'light';
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+}
+
+function subscribeToTheme(callback) {
+  if (typeof window === 'undefined') return () => {};
+  window.addEventListener('theme-changed', callback);
+  return () => window.removeEventListener('theme-changed', callback);
+}
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState('light');
-  const [mounted, setMounted] = useState(false);
+  // CRITICAL ARCHITECTURAL DECISION:
+  // We do NOT store theme in useState at this RootLayout level because root state updates
+  // force React to reconcile and re-render the entire application tree (including heavy
+  // Framer Motion sections and canvasses), introducing a 1-1.5s freeze.
+  // Instead, theme switching is 100% synchronous DOM-first (0ms latency), and consumers
+  // subscribe via useSyncExternalStore without causing full page re-renders.
 
-  // Apply theme to DOM and localStorage
-  const applyTheme = (newTheme) => {
-    const normalizedTheme = newTheme === 'dark' ? 'dark' : 'light';
-    const root = document.documentElement;
-    root.dataset.theme = normalizedTheme;
-    root.style.colorScheme = normalizedTheme;
-
-    if (normalizedTheme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-
-    localStorage.setItem('theme', normalizedTheme);
-    return normalizedTheme;
-  };
-
-  // Initialize theme on mount
-  useEffect(() => {
+  const toggleTheme = useCallback(() => {
     if (typeof window === 'undefined') return;
-    
-    let savedTheme = localStorage.getItem('theme');
-    if (savedTheme !== 'dark' && savedTheme !== 'light') {
-      savedTheme = null;
-    }
-    
-    // If no saved theme, detect from system preference
-    if (!savedTheme) {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      savedTheme = prefersDark ? 'dark' : 'light';
-    }
-    
-    setTheme(applyTheme(savedTheme));
-    setMounted(true);
+
+    const root = document.documentElement;
+    const isDark = root.classList.toggle('dark');
+    const newTheme = isDark ? 'dark' : 'light';
+    root.dataset.theme = newTheme;
+    root.style.colorScheme = newTheme;
+
+    try {
+      localStorage.setItem('theme', newTheme);
+    } catch {}
+
+    window.dispatchEvent(new CustomEvent('theme-changed', { detail: newTheme }));
   }, []);
 
-  // Toggle theme - apply synchronously first, then update state
-  const toggleTheme = () => {
-    if (typeof window === 'undefined') return;
-    
-    const root = document.documentElement;
-    // Read current theme from DOM, not from stale state
-    const currentTheme = root.classList.contains('dark') ? 'dark' : 'light';
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    setTheme(applyTheme(newTheme));
-  };
-
-  if (!mounted) {
-    return (
-      <ThemeContext.Provider value={{ theme, toggleTheme }}>
-        {children}
-      </ThemeContext.Provider>
-    );
-  }
-
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
@@ -73,8 +51,9 @@ export function ThemeProvider({ children }) {
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within ThemeProvider');
-  }
-  return context;
+  const theme = useSyncExternalStore(subscribeToTheme, getThemeSnapshot, () => 'light');
+  return {
+    theme,
+    toggleTheme: context?.toggleTheme || (() => {}),
+  };
 };

@@ -1,55 +1,26 @@
 import { NextResponse } from 'next/server';
-import PortfolioContent from '@/models/PortfolioContent';
-import { connectToDatabase, isMongoConfigured } from '@/lib/mongodb';
-import { DEFAULT_DATA } from '@/lib/storage';
+import { getPortfolioContent } from '@/lib/serverContent';
+import { isMongoConfigured } from '@/lib/mongodb';
 
 export const runtime = 'nodejs';
 
-function contentDefaults() {
-  return { ...DEFAULT_DATA };
-}
-
-function serializeContent(content) {
-  if (!content) return contentDefaults();
-
-  const serialized = content.toObject ? content.toObject() : content;
-  const { _id, singleton, createdAt, updatedAt, ...data } = serialized;
-  const mergedData = { ...contentDefaults(), ...data };
-  if (mergedData.resume?.data) {
-    mergedData.resume = {
-      url: mergedData.resume.url,
-      name: mergedData.resume.name,
-      contentType: mergedData.resume.contentType,
-      size: mergedData.resume.size,
-      uploadedAt: mergedData.resume.uploadedAt,
-    };
-  }
-  return mergedData;
-}
-
 export async function GET() {
   try {
-    if (!isMongoConfigured()) {
-      return NextResponse.json({
+    const data = await getPortfolioContent();
+    const source = isMongoConfigured() ? 'mongodb' : 'defaults';
+
+    return NextResponse.json(
+      {
         success: true,
-        source: 'defaults',
-        data: contentDefaults(),
-      });
-    }
-
-    await connectToDatabase();
-    const defaults = contentDefaults();
-    const content = await PortfolioContent.findOneAndUpdate(
-      { singleton: 'main' },
-      { $setOnInsert: { singleton: 'main', ...defaults } },
-      { new: true, upsert: true }
+        source,
+        data,
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, max-age=60, stale-while-revalidate=600',
+        },
+      }
     );
-
-    return NextResponse.json({
-      success: true,
-      source: 'mongodb',
-      data: serializeContent(content),
-    });
   } catch (error) {
     console.error('Content fetch failed:', error);
     return NextResponse.json(
@@ -58,3 +29,4 @@ export async function GET() {
     );
   }
 }
+

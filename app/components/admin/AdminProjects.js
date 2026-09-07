@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
-import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
+import { getFromStorage, saveContentSection, STORAGE_KEYS } from '@/lib/storage';
 import toast from 'react-hot-toast';
 
 export default function AdminProjects() {
   const [projects, setProjects] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -42,10 +43,10 @@ export default function AdminProjects() {
     setEditingId(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.description) {
+    if (!formData.title.trim() || !formData.description.trim()) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -53,30 +54,33 @@ export default function AdminProjects() {
     const techArray = formData.tech
       .split(',')
       .map((t) => t.trim())
-      .filter((t) => t);
+      .filter(Boolean);
 
-    if (editingId) {
-      const updatedProjects = projects.map((p) =>
-        p.id === editingId
-          ? { ...p, ...formData, tech: techArray }
-          : p
-      );
+    setLoading(true);
+    try {
+      let updatedProjects;
+      if (editingId) {
+        updatedProjects = projects.map((p) =>
+          p.id === editingId ? { ...p, ...formData, tech: techArray } : p
+        );
+      } else {
+        const newProject = {
+          id: Date.now().toString(),
+          ...formData,
+          tech: techArray,
+        };
+        updatedProjects = [...projects, newProject];
+      }
+
+      await saveContentSection('projects', updatedProjects);
       setProjects(updatedProjects);
-      saveToStorage(STORAGE_KEYS.PROJECTS, updatedProjects);
-      toast.success('Project updated successfully');
-    } else {
-      const newProject = {
-        id: Date.now().toString(),
-        ...formData,
-        tech: techArray,
-      };
-      const updatedProjects = [...projects, newProject];
-      setProjects(updatedProjects);
-      saveToStorage(STORAGE_KEYS.PROJECTS, updatedProjects);
-      toast.success('Project added successfully');
+      toast.success(editingId ? 'Project updated successfully' : 'Project added successfully');
+      resetForm();
+    } catch (error) {
+      toast.error(error.message || 'Failed to save project');
+    } finally {
+      setLoading(false);
     }
-
-    resetForm();
   };
 
   const handleEdit = (project) => {
@@ -85,22 +89,27 @@ export default function AdminProjects() {
       title: project.title,
       description: project.description,
       tech: project.tech.join(', '),
-      github: project.github,
-      live: project.live,
-      gradient: project.gradient,
-      icon: project.icon,
+      github: project.github || '',
+      live: project.live || '',
+      gradient: project.gradient || 'from-blue-500 to-cyan-500',
+      icon: project.icon || 'FaCode',
     });
     setIsAdding(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm('Are you sure you want to delete this project?')) {
       const updatedProjects = projects.filter((p) => p.id !== id);
-      setProjects(updatedProjects);
-      saveToStorage(STORAGE_KEYS.PROJECTS, updatedProjects);
-      toast.success('Project deleted successfully');
+      try {
+        await saveContentSection('projects', updatedProjects);
+        setProjects(updatedProjects);
+        toast.success('Project deleted successfully');
+      } catch (error) {
+        toast.error(error.message || 'Failed to delete project');
+      }
     }
   };
+
 
   return (
     <div className="space-y-6">

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
-import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
+import { getFromStorage, saveContentSection, STORAGE_KEYS } from '@/lib/storage';
 import toast from 'react-hot-toast';
 
 const gradientOptions = [
@@ -22,6 +22,7 @@ export default function AdminSkills() {
   const [skills, setSkills] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     color: 'from-blue-500 to-cyan-500',
@@ -45,33 +46,39 @@ export default function AdminSkills() {
     setEditingId(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name) {
+    if (!formData.name.trim()) {
       toast.error('Please enter a skill name');
       return;
     }
 
-    if (editingId) {
-      const updatedSkills = skills.map((s) =>
-        s.id === editingId ? { ...s, ...formData } : s
-      );
-      setSkills(updatedSkills);
-      saveToStorage(STORAGE_KEYS.SKILLS, updatedSkills);
-      toast.success('Skill updated successfully');
-    } else {
-      const newSkill = {
-        id: Date.now().toString(),
-        ...formData,
-      };
-      const updatedSkills = [...skills, newSkill];
-      setSkills(updatedSkills);
-      saveToStorage(STORAGE_KEYS.SKILLS, updatedSkills);
-      toast.success('Skill added successfully');
-    }
+    setLoading(true);
+    try {
+      let updatedSkills;
+      if (editingId) {
+        updatedSkills = skills.map((s) =>
+          s.id === editingId ? { ...s, ...formData, name: formData.name.trim() } : s
+        );
+      } else {
+        const newSkill = {
+          id: Date.now().toString(),
+          name: formData.name.trim(),
+          color: formData.color,
+        };
+        updatedSkills = [...skills, newSkill];
+      }
 
-    resetForm();
+      await saveContentSection('skills', updatedSkills);
+      setSkills(updatedSkills);
+      toast.success(editingId ? 'Skill updated successfully' : 'Skill added successfully');
+      resetForm();
+    } catch (error) {
+      toast.error(error.message || 'Failed to save skill');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEdit = (skill) => {
@@ -83,14 +90,19 @@ export default function AdminSkills() {
     setIsAdding(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm('Are you sure you want to delete this skill?')) {
       const updatedSkills = skills.filter((s) => s.id !== id);
-      setSkills(updatedSkills);
-      saveToStorage(STORAGE_KEYS.SKILLS, updatedSkills);
-      toast.success('Skill deleted successfully');
+      try {
+        await saveContentSection('skills', updatedSkills);
+        setSkills(updatedSkills);
+        toast.success('Skill deleted successfully');
+      } catch (error) {
+        toast.error(error.message || 'Failed to delete skill');
+      }
     }
   };
+
 
   return (
     <div className="space-y-6">

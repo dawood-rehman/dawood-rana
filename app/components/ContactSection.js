@@ -27,15 +27,21 @@ const icons = {
   FaMapMarkerAlt,
 };
 
-export default function ContactSection() {
-  const [socialLinks, setSocialLinks] = useState(DEFAULT_DATA.socialLinks);
-  const [contactInfo, setContactInfo] = useState(DEFAULT_DATA.contactInfo);
+export default function ContactSection({
+  initialContactInfo = DEFAULT_DATA.contactInfo,
+  initialSocialLinks = DEFAULT_DATA.socialLinks,
+}) {
+  const [socialLinks, setSocialLinks] = useState(initialSocialLinks);
+  const [contactInfo, setContactInfo] = useState(initialContactInfo);
 
   useEffect(() => {
     const loadData = () => {
-      setSocialLinks(getFromStorage(STORAGE_KEYS.SOCIAL_LINKS, DEFAULT_DATA.socialLinks));
-      setContactInfo(getFromStorage(STORAGE_KEYS.CONTACT_INFO, DEFAULT_DATA.contactInfo));
+      const storedSocials = getFromStorage(STORAGE_KEYS.SOCIAL_LINKS, null);
+      const storedContacts = getFromStorage(STORAGE_KEYS.CONTACT_INFO, null);
+      if (storedSocials) setSocialLinks(storedSocials);
+      if (storedContacts) setContactInfo(storedContacts);
     };
+
 
     loadData();
     window.addEventListener('storage', loadData);

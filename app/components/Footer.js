@@ -12,11 +12,6 @@ export default function Footer() {
   const router = useRouter();
 
   const handleNameClick = () => {
-    if (isAuthenticated) {
-      router.push('/admin');
-      return;
-    }
-
     setIsLoginOpen(true);
   };
 

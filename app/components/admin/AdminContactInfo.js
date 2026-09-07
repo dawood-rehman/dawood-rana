@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
-import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
+import { getFromStorage, saveContentSection, STORAGE_KEYS } from '@/lib/storage';
 import toast from 'react-hot-toast';
 
 export default function AdminContactInfo() {
@@ -12,6 +12,7 @@ export default function AdminContactInfo() {
   const [isAddingSocial, setIsAddingSocial] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [editType, setEditType] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     label: '',
     value: '',
@@ -37,46 +38,52 @@ export default function AdminContactInfo() {
     setSocials(socialData);
   };
 
-  const handleAddContact = (e) => {
+  const handleAddContact = async (e) => {
     e.preventDefault();
-    if (!formData.label || !formData.value) {
+    if (!formData.label.trim() || !formData.value.trim()) {
       toast.error('Please fill in all required fields');
       return;
     }
 
-    if (editingId) {
-      const updated = contacts.map((c) => (c.id === editingId ? { ...c, ...formData } : c));
+    setLoading(true);
+    try {
+      const updated = editingId
+        ? contacts.map((c) => (c.id === editingId ? { ...c, ...formData } : c))
+        : [...contacts, { id: Date.now().toString(), ...formData }];
+
+      await saveContentSection('contactInfo', updated);
       setContacts(updated);
-      saveToStorage(STORAGE_KEYS.CONTACT_INFO, updated);
-      toast.success('Contact info updated');
-    } else {
-      const updated = [...contacts, { id: Date.now().toString(), ...formData }];
-      setContacts(updated);
-      saveToStorage(STORAGE_KEYS.CONTACT_INFO, updated);
-      toast.success('Contact info added');
+      toast.success(editingId ? 'Contact info updated' : 'Contact info added');
+      resetContactForm();
+    } catch (error) {
+      toast.error(error.message || 'Failed to save contact info');
+    } finally {
+      setLoading(false);
     }
-    resetContactForm();
   };
 
-  const handleAddSocial = (e) => {
+  const handleAddSocial = async (e) => {
     e.preventDefault();
-    if (!socialFormData.name || !socialFormData.url) {
+    if (!socialFormData.name.trim() || !socialFormData.url.trim()) {
       toast.error('Please fill in all required fields');
       return;
     }
 
-    if (editingId) {
-      const updated = socials.map((s) => (s.id === editingId ? { ...s, ...socialFormData } : s));
+    setLoading(true);
+    try {
+      const updated = editingId
+        ? socials.map((s) => (s.id === editingId ? { ...s, ...socialFormData } : s))
+        : [...socials, { id: Date.now().toString(), ...socialFormData }];
+
+      await saveContentSection('socialLinks', updated);
       setSocials(updated);
-      saveToStorage(STORAGE_KEYS.SOCIAL_LINKS, updated);
-      toast.success('Social link updated');
-    } else {
-      const updated = [...socials, { id: Date.now().toString(), ...socialFormData }];
-      setSocials(updated);
-      saveToStorage(STORAGE_KEYS.SOCIAL_LINKS, updated);
-      toast.success('Social link added');
+      toast.success(editingId ? 'Social link updated' : 'Social link added');
+      resetSocialForm();
+    } catch (error) {
+      toast.error(error.message || 'Failed to save social link');
+    } finally {
+      setLoading(false);
     }
-    resetSocialForm();
   };
 
   const resetContactForm = () => {
@@ -99,23 +106,32 @@ export default function AdminContactInfo() {
     setEditType(null);
   };
 
-  const handleDeleteContact = (id) => {
+  const handleDeleteContact = async (id) => {
     if (confirm('Delete this contact info?')) {
       const updated = contacts.filter((c) => c.id !== id);
-      setContacts(updated);
-      saveToStorage(STORAGE_KEYS.CONTACT_INFO, updated);
-      toast.success('Deleted');
+      try {
+        await saveContentSection('contactInfo', updated);
+        setContacts(updated);
+        toast.success('Deleted');
+      } catch (error) {
+        toast.error(error.message || 'Failed to delete contact info');
+      }
     }
   };
 
-  const handleDeleteSocial = (id) => {
+  const handleDeleteSocial = async (id) => {
     if (confirm('Delete this social link?')) {
       const updated = socials.filter((s) => s.id !== id);
-      setSocials(updated);
-      saveToStorage(STORAGE_KEYS.SOCIAL_LINKS, updated);
-      toast.success('Deleted');
+      try {
+        await saveContentSection('socialLinks', updated);
+        setSocials(updated);
+        toast.success('Deleted');
+      } catch (error) {
+        toast.error(error.message || 'Failed to delete social link');
+      }
     }
   };
+
 
   return (
     <div className="space-y-8">

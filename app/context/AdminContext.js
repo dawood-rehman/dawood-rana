@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const AdminContext = createContext();
 
@@ -8,14 +8,32 @@ export function AdminProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Check if admin is already authenticated (session)
-    const authToken = sessionStorage.getItem('admin_auth');
-    if (authToken) {
-      setIsAuthenticated(true);
+  const checkSession = useCallback(async () => {
+    try {
+      const response = await fetch('/api/admin/session', {
+        method: 'GET',
+        cache: 'no-store',
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setIsAuthenticated(Boolean(data.authenticated));
+      } else {
+        setIsAuthenticated(false);
+      }
+    } catch {
+      setIsAuthenticated(false);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    // Clean up legacy sessionStorage key if present
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('admin_auth');
+    }
+    checkSession();
+  }, [checkSession]);
 
   const login = async (password) => {
     try {
@@ -25,22 +43,29 @@ export function AdminProvider({ children }) {
         body: JSON.stringify({ password }),
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(() => ({}));
       if (response.ok && result.success) {
-        sessionStorage.setItem('admin_auth', 'true');
         setIsAuthenticated(true);
-        return { success: true };
+        return { success: true, message: result.message || 'Login successful' };
       }
 
-      return { success: false, message: result.message || 'Invalid password' };
-    } catch (error) {
+      return {
+        success: false,
+        message: result.message || (response.status === 429 ? 'Too many attempts. Try again later.' : 'Invalid password'),
+      };
+    } catch {
       return { success: false, message: 'Unable to reach admin login service' };
     }
   };
 
-  const logout = () => {
-    sessionStorage.removeItem('admin_auth');
-    setIsAuthenticated(false);
+  const logout = async () => {
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' });
+    } catch (err) {
+      console.warn('Logout request error:', err);
+    } finally {
+      setIsAuthenticated(false);
+    }
   };
 
   return (
@@ -50,6 +75,7 @@ export function AdminProvider({ children }) {
         loading,
         login,
         logout,
+        checkSession,
       }}
     >
       {children}
@@ -64,3 +90,4 @@ export function useAdmin() {
   }
   return context;
 }
+

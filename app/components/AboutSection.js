@@ -21,22 +21,27 @@ const highlights = [
 
 const proofPoints = ['Next.js', 'MongoDB', 'API Design', 'Responsive UI'];
 
-export default function AboutSection() {
-  const [personalInfo, setPersonalInfo] = useState(fallbackPersonalInfo);
-  const [profilePicture, setProfilePicture] = useState('');
-  const [resumeUrl, setResumeUrl] = useState('');
+export default function AboutSection({
+  initialPersonalInfo = fallbackPersonalInfo,
+  initialProfilePicture = '',
+  initialResumeUrl = '',
+}) {
+  const [personalInfo, setPersonalInfo] = useState(initialPersonalInfo);
+  const [profilePicture, setProfilePicture] = useState(initialProfilePicture);
+  const [resumeUrl, setResumeUrl] = useState(initialResumeUrl);
 
   useEffect(() => {
     const loadContent = () => {
-      const savedInfo = getFromStorage(STORAGE_KEYS.PERSONAL_INFO, fallbackPersonalInfo);
-      const savedPicture = getFromStorage(STORAGE_KEYS.PROFILE_PICTURE, '');
+      const savedInfo = getFromStorage(STORAGE_KEYS.PERSONAL_INFO, null);
+      const savedPicture = getFromStorage(STORAGE_KEYS.PROFILE_PICTURE, null);
       const savedResume = getFromStorage(STORAGE_KEYS.RESUME, null);
 
-      setPersonalInfo({ ...fallbackPersonalInfo, ...savedInfo });
-      setProfilePicture(savedPicture);
-      setResumeUrl(savedResume?.url || '');
+      if (savedInfo) setPersonalInfo({ ...fallbackPersonalInfo, ...savedInfo });
+      if (savedPicture !== null && savedPicture !== undefined) setProfilePicture(savedPicture);
+      if (savedResume?.url) setResumeUrl(savedResume.url);
     };
 
+    // Check if client local storage has more recent local previews
     loadContent();
     window.addEventListener('personalInfoUpdated', loadContent);
     window.addEventListener('profilePictureUpdated', loadContent);
@@ -65,7 +70,11 @@ export default function AboutSection() {
         {profilePicture ? (
           <img
             src={profilePicture}
-            alt={personalInfo.name}
+            alt={personalInfo.name || 'Profile'}
+            width="560"
+            height="650"
+            decoding="async"
+            fetchPriority="high"
             className="aspect-[4/4.65] max-h-[610px] w-full object-cover"
           />
         ) : (

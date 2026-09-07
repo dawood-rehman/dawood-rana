@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { FaBrain, FaCode, FaEdit, FaLightbulb, FaPlus, FaRocket, FaTrash } from 'react-icons/fa';
 import toast from 'react-hot-toast';
-import { DEFAULT_DATA, getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
+import { DEFAULT_DATA, getFromStorage, saveContentSection, STORAGE_KEYS } from '@/lib/storage';
 
 const iconOptions = [
   { value: 'FaCode', label: 'Code', icon: FaCode },
@@ -23,6 +23,7 @@ export default function AdminPassion() {
   const [formData, setFormData] = useState(emptyForm);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadPassions();
@@ -38,7 +39,7 @@ export default function AdminPassion() {
     setEditingId(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.title.trim() || !formData.description.trim()) {
@@ -52,14 +53,21 @@ export default function AdminPassion() {
       description: formData.description.trim(),
     };
 
-    const updatedPassions = editingId
-      ? passions.map((item) => (item.id === editingId ? { ...item, ...payload } : item))
-      : [...passions, { id: Date.now().toString(), ...payload }];
+    setLoading(true);
+    try {
+      const updatedPassions = editingId
+        ? passions.map((item) => (item.id === editingId ? { ...item, ...payload } : item))
+        : [...passions, { id: Date.now().toString(), ...payload }];
 
-    setPassions(updatedPassions);
-    saveToStorage(STORAGE_KEYS.PASSIONS, updatedPassions);
-    toast.success(editingId ? 'Passion card updated' : 'Passion card added');
-    resetForm();
+      await saveContentSection('passions', updatedPassions);
+      setPassions(updatedPassions);
+      toast.success(editingId ? 'Passion card updated' : 'Passion card added');
+      resetForm();
+    } catch (error) {
+      toast.error(error.message || 'Failed to save passion card');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEdit = (passion) => {
@@ -72,14 +80,19 @@ export default function AdminPassion() {
     setIsEditing(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm('Delete this passion card?')) {
       const updatedPassions = passions.filter((item) => item.id !== id);
-      setPassions(updatedPassions);
-      saveToStorage(STORAGE_KEYS.PASSIONS, updatedPassions);
-      toast.success('Passion card deleted');
+      try {
+        await saveContentSection('passions', updatedPassions);
+        setPassions(updatedPassions);
+        toast.success('Passion card deleted');
+      } catch (error) {
+        toast.error(error.message || 'Failed to delete passion card');
+      }
     }
   };
+
 
   return (
     <div className="space-y-6">

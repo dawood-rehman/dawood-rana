@@ -57,11 +57,10 @@ export default function Navbar() {
       initial={{ y: -24, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={quickTransition}
-      className={`fixed inset-x-0 top-0 z-40 border-b ${
-        isScrolled
+      className={`fixed inset-x-0 top-0 z-40 border-b ${isScrolled
           ? 'border-slate-200/80 bg-white/86 shadow-sm backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/82'
           : 'border-slate-200/50 bg-white/58 backdrop-blur-xl dark:border-slate-800/60 dark:bg-slate-950/54'
-      }`}
+        }`}
     >
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <a href="#about" className="focus-ring group flex items-center gap-3 rounded-full">
@@ -81,11 +80,10 @@ export default function Navbar() {
               <a
                 key={item.href}
                 href={item.href}
-                className={`focus-ring rounded-full px-3.5 py-2 text-sm font-bold ${
-                  isActive
+                className={`focus-ring rounded-full px-3.5 py-2 text-sm font-bold ${isActive
                     ? 'bg-slate-950 text-white shadow-sm ring-1 ring-slate-950/10 dark:bg-white/10 dark:text-white dark:ring-white/10'
                     : 'text-slate-600 hover:bg-slate-950/5 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white'
-                }`}
+                  }`}
               >
                 {item.name}
               </a>
@@ -124,11 +122,10 @@ export default function Navbar() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`focus-ring rounded-lg px-3 py-3 text-sm font-semibold ${
-                      isActive
+                    className={`focus-ring rounded-lg px-3 py-3 text-sm font-semibold ${isActive
                         ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950'
                         : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-900'
-                    }`}
+                      }`}
                   >
                     {item.name}
                   </a>

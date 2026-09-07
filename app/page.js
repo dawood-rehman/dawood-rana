@@ -1,48 +1,44 @@
-'use client';
-
-import { useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import { initializeStorage } from '@/lib/storage';
-import AboutSection from './components/AboutSection';
+import { getPortfolioContent } from '@/lib/serverContent';
 import Navbar from './components/Navbar';
-import SectionLoader from './components/SectionLoader';
+import AboutSection from './components/AboutSection';
+import PassionSection from './components/PassionSection';
+import ProjectsSection from './components/ProjectsSection';
+import EducationSection from './components/EducationSection';
+import SkillsSection from './components/SkillsSection';
+import ContactSection from './components/ContactSection';
+import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
+import WhatsAppButton from './components/WhatsAppButton';
+import ClientStorageSync from './components/ClientStorageSync';
 
-const PassionSection = dynamic(() => import('./components/PassionSection'), {
-  loading: () => <SectionLoader label="Loading focus section" />,
-});
-const ProjectsSection = dynamic(() => import('./components/ProjectsSection'), {
-  loading: () => <SectionLoader label="Loading projects" />,
-});
-const EducationSection = dynamic(() => import('./components/EducationSection'), {
-  loading: () => <SectionLoader label="Loading education" />,
-});
-const SkillsSection = dynamic(() => import('./components/SkillsSection'), {
-  loading: () => <SectionLoader label="Loading skills" />,
-});
-const ContactSection = dynamic(() => import('./components/ContactSection'), {
-  loading: () => <SectionLoader label="Loading contact" />,
-});
-const Footer = dynamic(() => import('./components/Footer'));
-const ScrollToTop = dynamic(() => import('./components/ScrollToTop'), { ssr: false });
-const WhatsAppButton = dynamic(() => import('./components/WhatsAppButton'), { ssr: false });
+export const revalidate = 60; // ISR: revalidate cache every 60 seconds
 
-export default function Home() {
-  useEffect(() => {
-    initializeStorage();
-  }, []);
+export default async function Home() {
+  const content = await getPortfolioContent();
+  const phoneContact = content.contactInfo?.find(
+    (c) => c.label?.toLowerCase() === 'phone' || c.label?.toLowerCase() === 'whatsapp'
+  );
 
   return (
     <main className="relative overflow-x-hidden">
+      <ClientStorageSync />
       <Navbar />
-      <AboutSection />
-      <PassionSection />
-      <ProjectsSection />
-      <EducationSection />
-      <SkillsSection />
-      <ContactSection />
+      <AboutSection
+        initialPersonalInfo={content.personalInfo}
+        initialProfilePicture={content.profilePicture}
+        initialResumeUrl={content.resume?.url || ''}
+      />
+      <PassionSection initialPassions={content.passions} />
+      <ProjectsSection initialProjects={content.projects} />
+      <EducationSection initialEducation={content.education} />
+      <SkillsSection initialSkills={content.skills} />
+      <ContactSection
+        initialContactInfo={content.contactInfo}
+        initialSocialLinks={content.socialLinks}
+      />
       <Footer />
       <ScrollToTop />
-      <WhatsAppButton />
+      <WhatsAppButton initialPhone={phoneContact?.value || ''} />
     </main>
   );
 }

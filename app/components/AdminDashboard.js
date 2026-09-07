@@ -7,6 +7,7 @@ import {
   FaFolderOpen,
   FaGraduationCap,
   FaRocket,
+  FaShieldAlt,
   FaSignOutAlt,
   FaTools,
   FaUser,
@@ -19,6 +20,7 @@ import AdminContactInfo from './admin/AdminContactInfo';
 import AdminEducation from './admin/AdminEducation';
 import AdminPassion from './admin/AdminPassion';
 import AdminProjects from './admin/AdminProjects';
+import AdminSecurity from './admin/AdminSecurity';
 import AdminSkills from './admin/AdminSkills';
 
 const tabs = [
@@ -28,6 +30,7 @@ const tabs = [
   { id: 'education', label: 'Education', helper: 'Academic timeline', icon: FaGraduationCap },
   { id: 'skills', label: 'Skills', helper: 'Tech stack', icon: FaTools },
   { id: 'contact', label: 'Contact', helper: 'Info and socials', icon: FaAddressBook },
+  { id: 'security', label: 'Security', helper: 'Password & access', icon: FaShieldAlt },
 ];
 
 export default function AdminDashboard() {
@@ -73,6 +76,8 @@ export default function AdminDashboard() {
         return <AdminSkills />;
       case 'contact':
         return <AdminContactInfo />;
+      case 'security':
+        return <AdminSecurity />;
       default:
         return <AdminAbout />;
     }
@@ -109,7 +114,7 @@ export default function AdminDashboard() {
 
       <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
         <nav
-          className="mb-6 grid grid-cols-2 gap-2 rounded-lg border border-slate-800 bg-slate-900/40 p-2 sm:grid-cols-3 lg:grid-cols-6"
+          className="mb-6 grid grid-cols-2 gap-2 rounded-lg border border-slate-800 bg-slate-900/40 p-2 sm:grid-cols-3 lg:grid-cols-7"
           aria-label="Admin sections"
         >
           {tabs.map((tab) => {
