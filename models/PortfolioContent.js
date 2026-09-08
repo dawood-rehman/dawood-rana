@@ -348,6 +348,15 @@ const soundConfigSchema = new Schema(
   { _id: false }
 );
 
+const analyticsConfigSchema = new Schema(
+  {
+    enabled: { type: Boolean, default: true },
+    respectDnt: { type: Boolean, default: true },
+    trackEvents: { type: Boolean, default: true },
+  },
+  { _id: false }
+);
+
 const portfolioContentSchema = new Schema(
   {
     singleton: {
@@ -375,6 +384,7 @@ const portfolioContentSchema = new Schema(
     seoConfig: { type: seoConfigSchema, default: () => ({}) },
     particleConfig: { type: particleConfigSchema, default: () => ({}) },
     soundConfig: { type: soundConfigSchema, default: () => ({}) },
+    analyticsConfig: { type: analyticsConfigSchema, default: () => ({}) },
     resume: { type: resumeSchema, default: null },
     profilePicture: optionalString,
   },

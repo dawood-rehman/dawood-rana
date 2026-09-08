@@ -17,6 +17,7 @@ import WhatsAppButton from './components/WhatsAppButton';
 import ClientStorageSync from './components/ClientStorageSync';
 import InteractiveCanvas from './components/InteractiveCanvas';
 import SoundEngine from './components/SoundEngine';
+import AnalyticsTracker from './components/AnalyticsTracker';
 
 export const revalidate = 60; // ISR: revalidate cache every 60 seconds
 
@@ -121,6 +122,7 @@ export default async function Home() {
 
   return (
     <main className="relative overflow-x-hidden">
+      <AnalyticsTracker initialConfig={content.analyticsConfig} />
       <InteractiveCanvas initialConfig={content.particleConfig} />
       <SoundEngine initialConfig={content.soundConfig} />
       <ClientStorageSync />

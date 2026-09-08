@@ -6,6 +6,7 @@ import {
   FaArrowLeft,
   FaBriefcase,
   FaBullhorn,
+  FaChartLine,
   FaCommentDots,
   FaCompass,
   FaConciergeBell,
@@ -40,6 +41,7 @@ import AdminFooter from './admin/AdminFooter';
 import AdminBanners from './admin/AdminBanners';
 import AdminSEO from './admin/AdminSEO';
 import AdminEffects from './admin/AdminEffects';
+import AdminAnalytics from './admin/AdminAnalytics';
 import AdminContactInfo from './admin/AdminContactInfo';
 import AdminSecurity from './admin/AdminSecurity';
 
@@ -59,6 +61,7 @@ const tabs = [
   { id: 'banners', label: 'Banners', helper: 'Announcements', icon: FaBullhorn },
   { id: 'seo', label: 'SEO', helper: 'Meta & search', icon: FaSearch },
   { id: 'effects', label: 'Effects', helper: 'Particles & audio', icon: FaMagic },
+  { id: 'analytics', label: 'Analytics', helper: 'Traffic & stats', icon: FaChartLine },
   { id: 'contact', label: 'Contact', helper: 'Info and socials', icon: FaAddressBook },
   { id: 'security', label: 'Security', helper: 'Password & access', icon: FaShieldAlt },
 ];
@@ -128,6 +131,8 @@ export default function AdminDashboard() {
         return <AdminSEO />;
       case 'effects':
         return <AdminEffects />;
+      case 'analytics':
+        return <AdminAnalytics />;
       case 'contact':
         return <AdminContactInfo />;
       case 'security':

@@ -65,6 +65,7 @@ test('Content Structure: Content sections whitelist validation', () => {
     'seoConfig',
     'particleConfig',
     'soundConfig',
+    'analyticsConfig',
     'projects',
     'skills',
     'education',

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { getFromStorage, STORAGE_KEYS, DEFAULT_DATA } from '@/lib/storage';
+import { trackCustomEvent } from './AnalyticsTracker';
 
 function extractDigits(str = '') {
   return String(str).replace(/\D/g, '');
@@ -70,6 +71,7 @@ export default function WhatsAppButton({ initialPhone = '', initialName = '' }) 
       href={`https://wa.me/${phone}?text=${message}`}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => trackCustomEvent('whatsapp_click')}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}

@@ -9,12 +9,15 @@ import {
   FaInstagram,
   FaLinkedin,
   FaMapMarkerAlt,
+  FaPaperPlane,
   FaPhone,
   FaWhatsapp,
+  FaCheckCircle,
 } from 'react-icons/fa';
 import { DEFAULT_DATA, getFromStorage, STORAGE_KEYS } from '@/lib/storage';
 import { fadeUp, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
 import { getStableGradient } from './themePalette';
+import { trackCustomEvent } from './AnalyticsTracker';
 
 const icons = {
   FaFacebook,
@@ -38,6 +41,24 @@ export default function ContactSection({
     ...DEFAULT_DATA.sectionHeadings.contact,
     ...initialHeadings,
   });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (!formData.name.trim()) return;
+
+    trackCustomEvent('contact_submit', {
+      visitorName: formData.name.trim(),
+      path: '/#contact',
+    });
+
+    try {
+      localStorage.setItem('analytics_visitor_name', formData.name.trim());
+    } catch (_) {}
+
+    setSubmitted(true);
+  };
 
   useEffect(() => {
     const loadData = () => {
@@ -180,6 +201,95 @@ export default function ContactSection({
             </div>
           </motion.div>
         </div>
+
+        {/* Quick Message Form */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={fadeUp}
+          transition={smoothTransition}
+          className="mt-8 glass-panel elevated-card p-6 sm:p-8"
+        >
+          <div className="max-w-xl mx-auto text-center mb-6">
+            <h3 className="text-2xl font-black text-slate-950 dark:text-white">
+              Send a Quick Note
+            </h3>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+              Leave your name and a brief note to connect directly.
+            </p>
+          </div>
+
+          {submitted ? (
+            <div className="max-w-md mx-auto py-6 text-center space-y-2">
+              <FaCheckCircle className="mx-auto text-4xl text-emerald-500" />
+              <p className="text-lg font-bold text-slate-950 dark:text-white">
+                Thank you, {formData.name}!
+              </p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Your note has been recorded. Looking forward to connecting!
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSendMessage} className="max-w-xl mx-auto space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Your Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    placeholder="e.g. Hamza / Ali"
+                    className="w-full rounded-lg border border-slate-200 bg-white/80 px-3.5 py-2.5 text-sm text-slate-950 placeholder-slate-400 focus:border-blue-500 focus:outline-none dark:border-slate-800 dark:bg-slate-900/80 dark:text-white dark:placeholder-slate-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Email or Phone
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    placeholder="e.g. name@email.com"
+                    className="w-full rounded-lg border border-slate-200 bg-white/80 px-3.5 py-2.5 text-sm text-slate-950 placeholder-slate-400 focus:border-blue-500 focus:outline-none dark:border-slate-800 dark:bg-slate-900/80 dark:text-white dark:placeholder-slate-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Message
+                </label>
+                <textarea
+                  rows="3"
+                  value={formData.message}
+                  onChange={(e) =>
+                    setFormData({ ...formData, message: e.target.value })
+                  }
+                  placeholder="Tell me about your project, idea, or inquiry..."
+                  className="w-full rounded-lg border border-slate-200 bg-white/80 px-3.5 py-2.5 text-sm text-slate-950 placeholder-slate-400 focus:border-blue-500 focus:outline-none dark:border-slate-800 dark:bg-slate-900/80 dark:text-white dark:placeholder-slate-500 resize-none"
+                />
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="btn-primary focus-ring gap-2 px-6 py-2.5 text-sm"
+                >
+                  <FaPaperPlane className="text-xs" /> Send Message
+                </button>
+              </div>
+            </form>
+          )}
+        </motion.div>
       </div>
     </section>
   );

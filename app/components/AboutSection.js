@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fa';
 import { DEFAULT_DATA, getFromStorage, STORAGE_KEYS } from '@/lib/storage';
 import { fadeUp, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
+import { trackCustomEvent } from './AnalyticsTracker';
 
 const defaultHighlights = [
   { value: '10+', label: 'Projects' },
@@ -235,6 +236,7 @@ export default function AboutSection({
               <a
                 href={effectiveResumeHref}
                 download
+                onClick={() => trackCustomEvent('resume_download')}
                 className="btn-secondary focus-ring gap-2 px-5 py-3 text-sm"
               >
                 <FaDownload /> {ctaSecondary.label || 'Resume'}
