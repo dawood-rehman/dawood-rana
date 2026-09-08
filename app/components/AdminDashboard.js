@@ -26,6 +26,7 @@ import {
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useAdmin } from '@/app/context/AdminContext';
+import ThemeToggle from './ThemeToggle';
 import AdminAbout from './admin/AdminAbout';
 import AdminSections from './admin/AdminSections';
 import AdminPassion from './admin/AdminPassion';
@@ -160,13 +161,16 @@ export default function AdminDashboard() {
                 Manage every piece of content, section, header, and SEO across the portfolio.
               </p>
             </div>
-            <button
-              onClick={handleLogout}
-              className="flex min-h-11 items-center justify-center gap-2 rounded-lg bg-red-600 px-3 py-2 text-sm font-bold text-white transition-colors duration-150 hover:bg-red-700"
-            >
-              <FaSignOutAlt className="text-xs" />
-              Logout
-            </button>
+            <div className="flex items-center justify-center gap-3">
+              <ThemeToggle alwaysVisible={true} />
+              <button
+                onClick={handleLogout}
+                className="flex min-h-11 items-center justify-center gap-2 rounded-lg bg-red-600 px-3 py-2 text-sm font-bold text-white transition-colors duration-150 hover:bg-red-700"
+              >
+                <FaSignOutAlt className="text-xs" />
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </header>

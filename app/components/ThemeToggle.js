@@ -5,7 +5,7 @@ import { FaMoon, FaSun } from 'react-icons/fa';
 import { useTheme } from './ThemeProvider';
 import { playThemeSound } from '@/lib/soundManager';
 
-export default function ThemeToggle({ isMobile = false, onToggle }) {
+export default function ThemeToggle({ isMobile = false, alwaysVisible = false, onToggle }) {
   const { theme, toggleTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -50,7 +50,9 @@ export default function ThemeToggle({ isMobile = false, onToggle }) {
     <button
       type="button"
       onClick={handleToggle}
-      className="focus-ring relative hidden h-9 w-[4.5rem] items-center rounded-full border border-slate-200 bg-white/85 p-1 shadow-sm backdrop-blur-xl hover:bg-white dark:border-slate-800 dark:bg-slate-950/80 dark:hover:bg-slate-900 md:flex"
+      className={`focus-ring relative ${
+        alwaysVisible ? 'flex' : 'hidden md:flex'
+      } h-9 w-[4.5rem] items-center rounded-full border border-slate-200 bg-white/85 p-1 shadow-sm backdrop-blur-xl hover:bg-white dark:border-slate-800 dark:bg-slate-950/80 dark:hover:bg-slate-900`}
       aria-label="Toggle theme"
       title={mounted && isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >

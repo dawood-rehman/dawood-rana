@@ -308,69 +308,216 @@ html.dark .admin-tab-active {
   color: var(--foreground);
 }
 
-.admin-shell [class*="bg-slate-950"],
-.admin-shell [class*="bg-slate-900"],
-.admin-shell [class*="bg-slate-800"],
-.admin-shell [class*="bg-slate-700"] {
+/* ==========================================================================
+   ADMIN PANEL THEME SYSTEM (High-Contrast Light & Dark Themes)
+   ========================================================================== */
+
+/* --- Light Mode Card & Container Overrides --- */
+html:not(.dark) .admin-shell [class*="bg-slate-950"],
+html:not(.dark) .admin-shell [class*="bg-slate-900"],
+html:not(.dark) .admin-shell [class*="bg-slate-800"],
+html:not(.dark) .admin-shell [class*="bg-slate-700"] {
   background-color: var(--surface-strong);
+  border-color: var(--border);
+  box-shadow: var(--shadow-card);
 }
 
-.admin-shell [class*="bg-gradient-to-br"][class*="from-slate-800"],
-.admin-shell [class*="bg-gradient-to-br"][class*="from-slate-900"],
-.admin-shell [class*="bg-gradient-to-r"][class*="from-slate-800"],
-.admin-shell [class*="bg-gradient-to-r"][class*="from-slate-900"] {
+html:not(.dark) .admin-shell [class*="bg-slate-900/"],
+html:not(.dark) .admin-shell [class*="bg-slate-800/"],
+html:not(.dark) .admin-shell [class*="bg-slate-700/"] {
+  background-color: var(--surface-muted);
+  border-color: var(--border);
+}
+
+html:not(.dark) .admin-shell [class*="bg-gradient-to-br"][class*="from-slate-800"],
+html:not(.dark) .admin-shell [class*="bg-gradient-to-br"][class*="from-slate-900"],
+html:not(.dark) .admin-shell [class*="bg-gradient-to-r"][class*="from-slate-800"],
+html:not(.dark) .admin-shell [class*="bg-gradient-to-r"][class*="from-slate-900"] {
   background-image: none;
   background-color: var(--surface-strong);
+  border-color: var(--border);
+  box-shadow: var(--shadow-card);
 }
 
-.admin-shell [class*="border-slate-"] {
+html:not(.dark) .admin-shell [class*="border-slate-"] {
   border-color: var(--border);
 }
 
-.admin-shell h1,
-.admin-shell h2,
-.admin-shell h3,
-.admin-shell label,
-.admin-shell input,
-.admin-shell textarea,
-.admin-shell select {
-  color: var(--foreground);
-}
-
-.admin-shell [class*="text-slate-300"],
-.admin-shell [class*="text-slate-400"],
-.admin-shell [class*="text-slate-500"] {
-  color: var(--muted);
-}
-
-.admin-shell input,
-.admin-shell textarea,
-.admin-shell select {
-  background: color-mix(in srgb, var(--surface-muted) 72%, var(--surface-strong));
+html:not(.dark) .admin-shell [class*="divide-slate-"] > :not([hidden]) ~ :not([hidden]) {
   border-color: var(--border);
 }
 
-.admin-shell input::placeholder,
-.admin-shell textarea::placeholder {
-  color: color-mix(in srgb, var(--muted) 70%, transparent);
+/* --- Light Mode Typography: Maximum Contrast & Crystal Clear Legibility --- */
+html:not(.dark) .admin-shell h1,
+html:not(.dark) .admin-shell h2,
+html:not(.dark) .admin-shell h3,
+html:not(.dark) .admin-shell h4,
+html:not(.dark) .admin-shell h5,
+html:not(.dark) .admin-shell h6 {
+  color: var(--foreground) !important;
 }
 
-.admin-shell button[class*="bg-slate-"],
-.admin-shell a[class*="bg-slate-"] {
-  border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface-muted) 74%, var(--surface-strong));
-  color: var(--foreground);
+html:not(.dark) .admin-shell label {
+  color: #334155 !important;
 }
 
-.admin-shell button[class*="bg-slate-"]:hover,
-.admin-shell a[class*="bg-slate-"]:hover {
-  background: var(--surface-muted);
+/* Map hardcoded light/white text to crisp dark in light mode, preserving colored buttons/badges */
+html:not(.dark) .admin-shell [class*="text-white"]:not([class*="bg-blue-"]):not([class*="bg-indigo-"]):not([class*="bg-emerald-"]):not([class*="bg-green-"]):not([class*="bg-red-"]):not([class*="bg-rose-"]):not([class*="bg-purple-"]):not([class*="bg-gradient"]):not(.btn-primary):not(.admin-tab-active),
+html:not(.dark) .admin-shell [class*="text-slate-100"],
+html:not(.dark) .admin-shell [class*="text-slate-200"] {
+  color: var(--foreground) !important;
 }
 
-.admin-shell [class*="bg-gradient"] [class~="text-white"],
-.admin-shell [class*="bg-gradient"] h3,
-.admin-shell [class*="bg-gradient"] p {
-  color: #ffffff;
+html:not(.dark) .admin-shell p[class*="text-white"],
+html:not(.dark) .admin-shell span[class*="text-white"]:not([class*="bg-blue-"]):not([class*="bg-indigo-"]):not([class*="bg-emerald-"]):not([class*="bg-green-"]):not([class*="bg-red-"]):not([class*="bg-rose-"]):not([class*="bg-purple-"]):not(.btn-primary):not(.admin-tab-active),
+html:not(.dark) .admin-shell div[class*="text-white"]:not([class*="bg-blue-"]):not([class*="bg-indigo-"]):not([class*="bg-emerald-"]):not([class*="bg-green-"]):not([class*="bg-red-"]):not([class*="bg-rose-"]):not([class*="bg-purple-"]):not(.btn-primary):not(.admin-tab-active) {
+  color: var(--foreground) !important;
+}
+
+/* Muted secondary descriptions & helpers in light mode */
+html:not(.dark) .admin-shell [class*="text-slate-300"] {
+  color: #334155 !important;
+}
+
+html:not(.dark) .admin-shell [class*="text-slate-400"],
+html:not(.dark) .admin-shell [class*="text-slate-500"] {
+  color: #64748b !important;
+}
+
+/* --- Light Mode Form Controls (Inputs, Textareas, Selects) --- */
+html:not(.dark) .admin-shell input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html:not(.dark) .admin-shell textarea,
+html:not(.dark) .admin-shell select {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .admin-shell input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
+html:not(.dark) .admin-shell textarea:focus,
+html:not(.dark) .admin-shell select:focus {
+  background-color: #ffffff !important;
+  border-color: #2563eb !important;
+  color: #0f172a !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+}
+
+html:not(.dark) .admin-shell input::placeholder,
+html:not(.dark) .admin-shell textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+html:not(.dark) .admin-shell select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* --- Light Mode Secondary Buttons --- */
+html:not(.dark) .admin-shell button[class*="bg-slate-700"],
+html:not(.dark) .admin-shell button[class*="bg-slate-800"],
+html:not(.dark) .admin-shell button[class*="bg-slate-900"],
+html:not(.dark) .admin-shell a[class*="bg-slate-700"],
+html:not(.dark) .admin-shell a[class*="bg-slate-800"],
+html:not(.dark) .admin-shell a[class*="bg-slate-900"] {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .admin-shell button[class*="bg-slate-700"]:hover,
+html:not(.dark) .admin-shell button[class*="bg-slate-800"]:hover,
+html:not(.dark) .admin-shell button[class*="bg-slate-900"]:hover,
+html:not(.dark) .admin-shell a[class*="bg-slate-700"]:hover,
+html:not(.dark) .admin-shell a[class*="bg-slate-800"]:hover,
+html:not(.dark) .admin-shell a[class*="bg-slate-900"]:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .admin-shell button[class*="bg-slate-"] *,
+html:not(.dark) .admin-shell a[class*="bg-slate-"] * {
+  color: #0f172a !important;
+}
+
+/* --- Light Mode Badges & Chips --- */
+html:not(.dark) .admin-shell span[class*="bg-slate-700"],
+html:not(.dark) .admin-shell span[class*="bg-slate-800"],
+html:not(.dark) .admin-shell span[class*="bg-slate-900"] {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+/* --- Light Mode Tables (e.g. Analytics Identified Visitors) --- */
+html:not(.dark) .admin-shell thead {
+  border-color: #cbd5e1 !important;
+}
+
+html:not(.dark) .admin-shell th {
+  color: #475569 !important;
+}
+
+html:not(.dark) .admin-shell tbody tr {
+  border-color: #e2e8f0 !important;
+}
+
+html:not(.dark) .admin-shell tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
+html:not(.dark) .admin-shell td {
+  color: #0f172a !important;
+}
+
+/* --- Preserve Crisp White Text on Intentional Colored Buttons/Gradients --- */
+.admin-shell [class*="bg-blue-"] [class*="text-white"],
+.admin-shell [class*="bg-indigo-"] [class*="text-white"],
+.admin-shell [class*="bg-emerald-"] [class*="text-white"],
+.admin-shell [class*="bg-green-"] [class*="text-white"],
+.admin-shell [class*="bg-red-"] [class*="text-white"],
+.admin-shell [class*="bg-rose-"] [class*="text-white"],
+.admin-shell [class*="bg-purple-"] [class*="text-white"],
+.admin-shell [class*="bg-gradient"][class*="from-blue-"],
+.admin-shell [class*="bg-gradient"][class*="from-indigo-"],
+.admin-shell [class*="bg-gradient"][class*="from-emerald-"],
+.admin-shell [class*="bg-gradient"][class*="from-green-"],
+.admin-shell [class*="bg-gradient"][class*="from-red-"],
+.admin-shell [class*="bg-gradient"][class*="from-rose-"],
+.admin-shell [class*="bg-gradient"][class*="from-purple-"],
+.admin-shell [class*="bg-gradient"][class*="from-blue-"] *,
+.admin-shell [class*="bg-gradient"][class*="from-indigo-"] *,
+.admin-shell [class*="bg-gradient"][class*="from-emerald-"] *,
+.admin-shell [class*="bg-gradient"][class*="from-green-"] *,
+.admin-shell [class*="bg-gradient"][class*="from-red-"] *,
+.admin-shell [class*="bg-gradient"][class*="from-rose-"] *,
+.admin-shell [class*="bg-gradient"][class*="from-purple-"] *,
+.admin-shell button[class*="bg-blue-"],
+.admin-shell button[class*="bg-indigo-"],
+.admin-shell button[class*="bg-emerald-"],
+.admin-shell button[class*="bg-green-"],
+.admin-shell button[class*="bg-red-"],
+.admin-shell button[class*="bg-rose-"],
+.admin-shell button[class*="bg-purple-"],
+.admin-shell button[class*="bg-blue-"] *,
+.admin-shell button[class*="bg-indigo-"] *,
+.admin-shell button[class*="bg-emerald-"] *,
+.admin-shell button[class*="bg-green-"] *,
+.admin-shell button[class*="bg-red-"] *,
+.admin-shell button[class*="bg-rose-"] *,
+.admin-shell button[class*="bg-purple-"] *,
+.admin-shell .btn-primary,
+.admin-shell .btn-primary * {
+  color: #ffffff !important;
+}
+
+/* --- Dark Mode Overrides (Intact) --- */
+html.dark .admin-shell [class*="bg-slate-950"],
+html.dark .admin-shell [class*="bg-slate-900"],
+html.dark .admin-shell [class*="bg-slate-800"],
+html.dark .admin-shell [class*="bg-slate-700"] {
+  background-color: var(--surface-strong);
+  border-color: var(--border);
 }
 
 html.dark .admin-shell [class*="bg-gradient"] [class~="text-white"],
@@ -378,6 +525,22 @@ html.dark .admin-shell [class*="bg-gradient"] h3,
 html.dark .admin-shell [class*="bg-gradient"] p {
   color: #ffffff;
 }
+
+html.dark .admin-shell input,
+html.dark .admin-shell textarea,
+html.dark .admin-shell select {
+  background: color-mix(in srgb, var(--surface-muted) 72%, var(--surface-strong));
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+html.dark .admin-shell button[class*="bg-slate-"],
+html.dark .admin-shell a[class*="bg-slate-"] {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-muted) 74%, var(--surface-strong));
+  color: var(--foreground);
+}
+
 
 .accent-text {
   color: var(--accent);
