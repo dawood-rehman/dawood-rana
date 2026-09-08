@@ -74,8 +74,10 @@ export default function WhatsAppButton({ initialPhone = '', initialName = '' }) 
       onClick={() => trackCustomEvent('whatsapp_click')}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
-      className="fixed bottom-24 left-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white shadow-lg shadow-emerald-950/20 ring-1 ring-white/15 hover:-translate-y-0.5 hover:bg-emerald-700 focus-ring"
+      whileHover={{ y: -3, scale: 1.06 }}
+      whileTap={{ scale: 0.94 }}
+      transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed bottom-24 left-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white shadow-lg shadow-emerald-950/20 ring-1 ring-white/15 hover:bg-emerald-700 focus-ring"
       aria-label="Contact on WhatsApp"
       title="Chat on WhatsApp"
     >

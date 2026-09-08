@@ -86,20 +86,27 @@ textarea,
 select,
 a {
   transition:
-    box-shadow 150ms ease,
-    border-color 150ms ease,
-    background-color 150ms ease,
-    color 150ms ease;
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 200ms ease,
+    background-color 200ms ease,
+    color 200ms ease;
 }
 
 .btn-primary,
 .btn-secondary {
   transition:
-    transform 150ms ease,
-    box-shadow 150ms ease,
-    border-color 150ms ease,
-    background-color 150ms ease,
-    color 150ms ease;
+    transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 220ms ease,
+    background-color 220ms ease,
+    color 220ms ease;
+}
+
+.btn-primary:active,
+.btn-secondary:active {
+  transform: translateY(0px) scale(0.98);
+  transition-duration: 90ms;
 }
 
 ::selection {
@@ -181,6 +188,11 @@ a {
   background: var(--surface);
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(18px);
+  transition:
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 260ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel {
@@ -193,7 +205,13 @@ a {
 
 .quiet-card:hover,
 .glass-panel:hover {
-  border-color: color-mix(in srgb, var(--accent) 28%, var(--border));
+  border-color: color-mix(in srgb, var(--accent) 32%, var(--border));
+  box-shadow: 0 16px 42px rgba(16, 24, 40, 0.1);
+}
+
+html.dark .quiet-card:hover,
+html.dark .glass-panel:hover {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.44);
 }
 
 .elevated-card {

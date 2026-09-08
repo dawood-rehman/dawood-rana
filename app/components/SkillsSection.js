@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { DEFAULT_DATA, getFromStorage, STORAGE_KEYS } from '@/lib/storage';
-import { fadeUp, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
+import { fadeUp, smoothTransition, staggerContainer, viewportOnce, cardHover, cardTap } from './motionPresets';
 import { getStableGradient } from './themePalette';
 
 export default function SkillsSection({
@@ -76,8 +76,9 @@ export default function SkillsSection({
             <motion.div
               key={skill.id || skill.name}
               variants={fadeUp}
-              transition={smoothTransition}
-              className="quiet-card elevated-card flex min-h-20 items-center gap-3 p-4 hover:-translate-y-1"
+              whileHover={cardHover}
+              whileTap={cardTap}
+              className="quiet-card elevated-card flex min-h-20 items-center gap-3 p-4"
             >
               <span
                 className={`h-3 w-3 flex-shrink-0 rounded-full bg-gradient-to-br ${getStableGradient(

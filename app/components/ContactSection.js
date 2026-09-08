@@ -15,7 +15,7 @@ import {
   FaCheckCircle,
 } from 'react-icons/fa';
 import { DEFAULT_DATA, getFromStorage, STORAGE_KEYS } from '@/lib/storage';
-import { fadeUp, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
+import { fadeUp, smoothTransition, staggerContainer, viewportOnce, cardHover, cardTap } from './motionPresets';
 import { getStableGradient } from './themePalette';
 import { trackCustomEvent } from './AnalyticsTracker';
 
@@ -130,8 +130,9 @@ export default function ContactSection({
                   key={info.id || info.label}
                   href={info.link || '#'}
                   variants={fadeUp}
-                  transition={smoothTransition}
-                  className="quiet-card elevated-card focus-ring flex items-center gap-4 p-5 hover:-translate-y-1"
+                  whileHover={cardHover}
+                  whileTap={cardTap}
+                  className="quiet-card elevated-card focus-ring flex items-center gap-4 p-5"
                 >
                   <span className="icon-tile h-12 w-12 flex-shrink-0">
                     <Icon />
@@ -179,8 +180,9 @@ export default function ContactSection({
                     target="_blank"
                     rel="noopener noreferrer"
                     variants={fadeUp}
-                    transition={smoothTransition}
-                    className="focus-ring rounded-lg border border-slate-200 bg-white/70 p-4 hover:-translate-y-1 hover:border-slate-300 hover:bg-white dark:border-slate-800 dark:bg-slate-900/70 dark:hover:border-slate-700 dark:hover:bg-slate-900"
+                    whileHover={cardHover}
+                    whileTap={cardTap}
+                    className="focus-ring rounded-lg border border-slate-200 bg-white/70 p-4 transition-colors hover:border-slate-300 hover:bg-white dark:border-slate-800 dark:bg-slate-900/70 dark:hover:border-slate-700 dark:hover:bg-slate-900"
                   >
                     <div className="flex items-center gap-3">
                       <span
@@ -214,7 +216,7 @@ export default function ContactSection({
           <button
             type="button"
             onClick={() => window.dispatchEvent(new CustomEvent('open-contact-modal'))}
-            className="btn-primary focus-ring inline-flex items-center gap-2.5 px-6 py-3 text-sm font-bold shadow-lg hover:-translate-y-0.5 transition-all"
+            className="btn-primary focus-ring inline-flex items-center gap-2.5 px-6 py-3 text-sm font-bold shadow-lg"
           >
             <FaPaperPlane className="text-xs" /> Send a Quick Note
           </button>

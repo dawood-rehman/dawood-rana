@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaGraduationCap, FaSchool, FaUniversity } from 'react-icons/fa';
 import { DEFAULT_DATA, getFromStorage, STORAGE_KEYS } from '@/lib/storage';
-import { fadeUp, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
+import { fadeUp, smoothTransition, staggerContainer, viewportOnce, cardHover, cardTap } from './motionPresets';
 import { getStableGradient } from './themePalette';
 
 const icons = {
@@ -88,8 +88,9 @@ export default function EducationSection({
               <motion.article
                 key={edu.id || edu.title}
                 variants={fadeUp}
-                transition={smoothTransition}
-                className="quiet-card elevated-card relative p-6 text-center hover:-translate-y-1"
+                whileHover={cardHover}
+                whileTap={cardTap}
+                className="quiet-card elevated-card relative p-6 text-center"
               >
                 <span className="mb-4 inline-flex rounded-full border border-slate-200 bg-white/70 px-3 py-1 text-xs font-black uppercase text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-400">
                   Step {String(index + 1).padStart(2, '0')}

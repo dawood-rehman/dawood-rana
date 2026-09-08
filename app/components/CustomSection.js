@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { fadeUp, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
+import { fadeUp, smoothTransition, staggerContainer, viewportOnce, cardHover, cardTap } from './motionPresets';
 import { getStableGradient } from './themePalette';
 
 export default function CustomSection({ section }) {
@@ -50,8 +50,9 @@ export default function CustomSection({ section }) {
               <motion.article
                 key={item.id || `${item.title}-${index}`}
                 variants={fadeUp}
-                transition={smoothTransition}
-                className="quiet-card elevated-card flex flex-col p-6 hover:-translate-y-1"
+                whileHover={cardHover}
+                whileTap={cardTap}
+                className="quiet-card elevated-card flex flex-col p-6"
               >
                 <div className={`mb-6 h-1.5 w-20 rounded-full bg-gradient-to-r ${accentGradient}`} />
 

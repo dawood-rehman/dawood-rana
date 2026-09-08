@@ -107,7 +107,7 @@ export default function Navbar({
       initial={{ y: -24, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={quickTransition}
-      className={`fixed inset-x-0 top-0 z-40 border-b ${
+      className={`fixed inset-x-0 top-0 z-40 border-b transition-all duration-300 ease-out ${
         isScrolled
           ? 'border-slate-200/80 bg-white/86 shadow-sm backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/82'
           : 'border-slate-200/50 bg-white/58 backdrop-blur-xl dark:border-slate-800/60 dark:bg-slate-950/54'
@@ -118,7 +118,7 @@ export default function Navbar({
           href={navbarConfig.logoHref || '#about'}
           className="focus-ring group flex items-center gap-3 rounded-full"
         >
-          <span className="icon-tile h-10 w-10 rounded-full text-sm font-black">
+          <span className="icon-tile h-10 w-10 rounded-full text-sm font-black transition-transform duration-200 group-hover:scale-105">
             {displayInitials}
           </span>
           <span className="hidden text-sm font-black text-slate-900 dark:text-white sm:block">
@@ -137,7 +137,7 @@ export default function Navbar({
                 href={item.href}
                 target={item.isExternal ? '_blank' : undefined}
                 rel={item.isExternal ? 'noopener noreferrer' : undefined}
-                className={`focus-ring rounded-full px-3.5 py-2 text-sm font-bold ${
+                className={`focus-ring rounded-full px-3.5 py-2 text-sm font-bold transition-colors duration-200 ease-out ${
                   isActive
                     ? 'bg-slate-950 text-white shadow-sm ring-1 ring-slate-950/10 dark:bg-white/10 dark:text-white dark:ring-white/10'
                     : 'text-slate-600 hover:bg-slate-950/5 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white'

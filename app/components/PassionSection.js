@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaBrain, FaCode, FaLightbulb, FaRocket } from 'react-icons/fa';
 import { DEFAULT_DATA, getFromStorage, STORAGE_KEYS } from '@/lib/storage';
-import { fadeUp, smoothTransition, staggerContainer, viewportOnce } from './motionPresets';
+import { fadeUp, smoothTransition, staggerContainer, viewportOnce, cardHover, cardTap } from './motionPresets';
 import { getStableGradient } from './themePalette';
 
 const passionIcons = {
@@ -86,8 +86,9 @@ export default function PassionSection({
               <motion.article
                 key={passion.id || passion.title}
                 variants={fadeUp}
-                transition={smoothTransition}
-                className="quiet-card elevated-card p-6 hover:-translate-y-1"
+                whileHover={cardHover}
+                whileTap={cardTap}
+                className="quiet-card elevated-card p-6"
               >
                 <div className={`mb-6 h-1.5 w-20 rounded-full bg-gradient-to-r ${accentGradient}`} />
                 <div className="icon-tile mb-5 h-12 w-12">

@@ -202,8 +202,7 @@ export default function AboutSection({
         <motion.div
           variants={staggerContainer}
           initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
+          animate="visible"
           className="space-y-7"
         >
           <motion.div variants={fadeUp} transition={smoothTransition} className="eyebrow">
@@ -277,9 +276,8 @@ export default function AboutSection({
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={viewportOnce}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={smoothTransition}
           className="hidden lg:block lg:justify-self-end"
         >
