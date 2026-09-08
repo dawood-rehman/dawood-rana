@@ -11,6 +11,7 @@ import ServicesSection from './components/ServicesSection';
 import TestimonialsSection from './components/TestimonialsSection';
 import CustomSection from './components/CustomSection';
 import ContactSection from './components/ContactSection';
+import ContactModal from './components/ContactModal';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import WhatsAppButton from './components/WhatsAppButton';
@@ -141,6 +142,11 @@ export default async function Home() {
       <WhatsAppButton
         initialPhone={phoneContact?.value || ''}
         initialName={content.personalInfo?.name || ''}
+      />
+      <ContactModal
+        initialContactInfo={content.contactInfo}
+        initialSocialLinks={content.socialLinks}
+        initialHeadings={content.sectionHeadings?.contact}
       />
     </main>
   );

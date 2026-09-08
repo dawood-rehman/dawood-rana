@@ -98,3 +98,11 @@ test('Content Structure: Particle and Sound Effects configuration', () => {
   assert.equal(initialData.soundConfig.enableButtonClicks, true);
   assert.equal(initialData.soundConfig.enableModals, true);
 });
+
+test('Content Structure: Contact section and channels configuration', () => {
+  assert.ok(Array.isArray(initialData.contactInfo), 'contactInfo must be an array');
+  assert.ok(initialData.contactInfo.length >= 2, 'contactInfo should have primary channels');
+  assert.ok(Array.isArray(initialData.socialLinks), 'socialLinks must be an array');
+  assert.ok(initialData.socialLinks.length >= 3, 'socialLinks should have social channels');
+  assert.ok(initialData.sectionHeadings?.contact, 'contact sectionHeadings must exist');
+});
