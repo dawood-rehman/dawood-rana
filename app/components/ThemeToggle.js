@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { useTheme } from './ThemeProvider';
+import { playThemeSound } from '@/lib/soundManager';
 
 export default function ThemeToggle({ isMobile = false, onToggle }) {
   const { theme, toggleTheme } = useTheme();
@@ -15,7 +16,9 @@ export default function ThemeToggle({ isMobile = false, onToggle }) {
   const handleToggle = (e) => {
     e?.preventDefault();
     e?.stopPropagation();
+    const nextIsDark = theme !== 'dark';
     toggleTheme();
+    playThemeSound(nextIsDark);
     onToggle?.();
   };
 

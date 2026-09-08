@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAdmin } from '@/app/context/AdminContext';
 import toast from 'react-hot-toast';
+import { playModalSound } from '@/lib/soundManager';
 
 export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [password, setPassword] = useState('');
@@ -13,9 +14,16 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
   const inputRef = useRef(null);
   const previousFocusRef = useRef(null);
 
+  const handleClose = () => {
+    playModalSound(false);
+    onClose();
+  };
+
   // Focus management & Escape key handling
   useEffect(() => {
     if (!isOpen) return;
+
+    playModalSound(true);
 
     // Save active element to restore focus when closed
     previousFocusRef.current = document.activeElement;
@@ -28,7 +36,7 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         e.preventDefault();
-        onClose();
+        handleClose();
         return;
       }
 
@@ -94,7 +102,7 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
-            onClick={onClose}
+            onClick={handleClose}
             aria-hidden="true"
             className="fixed inset-0 bg-black/50 backdrop-blur-xs z-40"
           />
@@ -155,7 +163,7 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
 
               <motion.button
                 type="button"
-                onClick={onClose}
+                onClick={handleClose}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
                 className="btn-secondary mt-4 w-full px-3 py-2 text-sm sm:px-4 sm:py-2.5 sm:text-base"

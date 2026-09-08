@@ -324,6 +324,30 @@ const seoConfigSchema = new Schema(
   { _id: false }
 );
 
+const particleConfigSchema = new Schema(
+  {
+    enabled: { type: Boolean, default: true },
+    particleCount: { type: Number, default: 45 },
+    speed: { type: Number, default: 0.8 },
+    connectLines: { type: Boolean, default: true },
+    interactive: { type: Boolean, default: true },
+    colorTheme: { type: String, default: 'auto' },
+  },
+  { _id: false }
+);
+
+const soundConfigSchema = new Schema(
+  {
+    enabled: { type: Boolean, default: true },
+    volume: { type: Number, default: 0.2 },
+    enableThemeToggle: { type: Boolean, default: true },
+    enableButtonClicks: { type: Boolean, default: true },
+    enableModals: { type: Boolean, default: true },
+    soundTheme: { type: String, default: 'modern' },
+  },
+  { _id: false }
+);
+
 const portfolioContentSchema = new Schema(
   {
     singleton: {
@@ -349,6 +373,8 @@ const portfolioContentSchema = new Schema(
     footerConfig: { type: footerConfigSchema, default: () => ({}) },
     banners: { type: [bannerSchema], default: [] },
     seoConfig: { type: seoConfigSchema, default: () => ({}) },
+    particleConfig: { type: particleConfigSchema, default: () => ({}) },
+    soundConfig: { type: soundConfigSchema, default: () => ({}) },
     resume: { type: resumeSchema, default: null },
     profilePicture: optionalString,
   },

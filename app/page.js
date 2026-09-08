@@ -15,6 +15,8 @@ import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import WhatsAppButton from './components/WhatsAppButton';
 import ClientStorageSync from './components/ClientStorageSync';
+import InteractiveCanvas from './components/InteractiveCanvas';
+import SoundEngine from './components/SoundEngine';
 
 export const revalidate = 60; // ISR: revalidate cache every 60 seconds
 
@@ -119,6 +121,8 @@ export default async function Home() {
 
   return (
     <main className="relative overflow-x-hidden">
+      <InteractiveCanvas initialConfig={content.particleConfig} />
+      <SoundEngine initialConfig={content.soundConfig} />
       <ClientStorageSync />
       <AnnouncementBanner initialBanners={content.banners} />
       <Navbar

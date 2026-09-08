@@ -63,6 +63,8 @@ test('Content Structure: Content sections whitelist validation', () => {
     'footerConfig',
     'banners',
     'seoConfig',
+    'particleConfig',
+    'soundConfig',
     'projects',
     'skills',
     'education',
@@ -78,4 +80,20 @@ test('Content Structure: Content sections whitelist validation', () => {
       `Section ${section} must be in CONTENT_SECTIONS whitelist`
     );
   });
+});
+
+test('Content Structure: Particle and Sound Effects configuration', () => {
+  assert.ok(initialData.particleConfig, 'particleConfig must exist in initialData');
+  assert.equal(initialData.particleConfig.enabled, true);
+  assert.equal(typeof initialData.particleConfig.particleCount, 'number');
+  assert.equal(typeof initialData.particleConfig.speed, 'number');
+  assert.equal(initialData.particleConfig.connectLines, true);
+  assert.equal(initialData.particleConfig.interactive, true);
+
+  assert.ok(initialData.soundConfig, 'soundConfig must exist in initialData');
+  assert.equal(initialData.soundConfig.enabled, true);
+  assert.equal(typeof initialData.soundConfig.volume, 'number');
+  assert.equal(initialData.soundConfig.enableThemeToggle, true);
+  assert.equal(initialData.soundConfig.enableButtonClicks, true);
+  assert.equal(initialData.soundConfig.enableModals, true);
 });

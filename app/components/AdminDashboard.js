@@ -12,6 +12,7 @@ import {
   FaFolderOpen,
   FaGraduationCap,
   FaLayerGroup,
+  FaMagic,
   FaPuzzlePiece,
   FaRocket,
   FaSearch,
@@ -38,6 +39,7 @@ import AdminNavbar from './admin/AdminNavbar';
 import AdminFooter from './admin/AdminFooter';
 import AdminBanners from './admin/AdminBanners';
 import AdminSEO from './admin/AdminSEO';
+import AdminEffects from './admin/AdminEffects';
 import AdminContactInfo from './admin/AdminContactInfo';
 import AdminSecurity from './admin/AdminSecurity';
 
@@ -56,6 +58,7 @@ const tabs = [
   { id: 'footer', label: 'Footer', helper: 'Copyright & links', icon: FaShoePrints },
   { id: 'banners', label: 'Banners', helper: 'Announcements', icon: FaBullhorn },
   { id: 'seo', label: 'SEO', helper: 'Meta & search', icon: FaSearch },
+  { id: 'effects', label: 'Effects', helper: 'Particles & audio', icon: FaMagic },
   { id: 'contact', label: 'Contact', helper: 'Info and socials', icon: FaAddressBook },
   { id: 'security', label: 'Security', helper: 'Password & access', icon: FaShieldAlt },
 ];
@@ -123,6 +126,8 @@ export default function AdminDashboard() {
         return <AdminBanners />;
       case 'seo':
         return <AdminSEO />;
+      case 'effects':
+        return <AdminEffects />;
       case 'contact':
         return <AdminContactInfo />;
       case 'security':
